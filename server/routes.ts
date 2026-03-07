@@ -13,6 +13,8 @@ import {
   createChapter,
   updateChapter,
   deleteChapter,
+  getAllSettings,
+  updateSettings,
 } from "./storage";
 
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "admin123";
@@ -152,6 +154,35 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const ok = await deleteChapter(Number(req.params.id));
       if (!ok) return res.status(404).json({ error: "Not found" });
+      res.json({ success: true });
+    } catch (e) {
+      res.status(500).json({ error: "Server error" });
+    }
+  });
+
+  // Public settings API (developer info)
+  app.get("/api/settings", async (_req, res) => {
+    try {
+      const settings = await getAllSettings();
+      res.json(settings);
+    } catch (e) {
+      res.status(500).json({ error: "Server error" });
+    }
+  });
+
+  // Admin settings API
+  app.get("/api/admin/settings", requireAdmin, async (_req, res) => {
+    try {
+      const settings = await getAllSettings();
+      res.json(settings);
+    } catch (e) {
+      res.status(500).json({ error: "Server error" });
+    }
+  });
+
+  app.put("/api/admin/settings", requireAdmin, async (req, res) => {
+    try {
+      await updateSettings(req.body);
       res.json({ success: true });
     } catch (e) {
       res.status(500).json({ error: "Server error" });

@@ -157,9 +157,17 @@ export default function HomeScreen() {
                   এলেঙ্গা, টাঙ্গাইল
                 </Text>
               </View>
-              <View style={[styles.headerIconWrap, { backgroundColor: isDark ? Colors.darkSurface : Colors.white }]}>
-                <Ionicons name="library" size={22} color={Colors.navy} />
-              </View>
+              <Pressable
+                onPress={() => {
+                  if (Platform.OS !== "web") {
+                    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                  }
+                  router.push("/developer");
+                }}
+                style={[styles.headerIconWrap, { backgroundColor: isDark ? Colors.darkSurface : Colors.white }]}
+              >
+                <Ionicons name="information-circle-outline" size={22} color={Colors.navy} />
+              </Pressable>
             </View>
 
           </View>

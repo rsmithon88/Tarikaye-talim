@@ -124,3 +124,21 @@ export async function deleteChapter(id: number): Promise<boolean> {
   const { rowCount } = await pool.query("DELETE FROM chapters WHERE id=$1", [id]);
   return (rowCount || 0) > 0;
 }
+
+export async function getAllSettings(): Promise<Record<string, string>> {
+  const { rows } = await pool.query("SELECT key, value FROM settings");
+  const result: Record<string, string> = {};
+  rows.forEach((r: { key: string; value: string }) => {
+    result[r.key] = r.value;
+  });
+  return result;
+}
+
+export async function updateSettings(data: Record<string, string>): Promise<void> {
+  for (const [key, value] of Object.entries(data)) {
+    await pool.query(
+      "INSERT INTO settings (key, value) VALUES ($1, $2) ON CONFLICT (key) DO UPDATE SET value = $2",
+      [key, value]
+    );
+  }
+}

@@ -317,6 +317,15 @@
     </div>
     <div id="book-list"></div>
     <button class="btn-new-book" onclick="closeSidebar(); showNewBookForm();">+ নতুন বই যোগ করুন</button>
+    <div style="border-top:1px solid var(--border);margin:16px 0 0;padding:14px 16px 0;">
+      <div class="book-item" onclick="closeSidebar(); showDevSettings();" style="border-radius:8px;">
+        <div style="width:26px;height:34px;background:var(--gold);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:16px;">&#9881;</div>
+        <div class="book-item-info">
+          <div class="book-item-title">ডেভেলপার তথ্য</div>
+          <div class="book-item-meta">নাম, ঠিকানা, যোগাযোগ</div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- Full Page Content -->
@@ -771,6 +780,70 @@ function escHtml(str) {
 }
 function escAttr(str) {
   return String(str || '').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+async function showDevSettings() {
+  selectedBookId = null;
+  editingChapterId = null;
+  renderBookList();
+  document.getElementById('current-book-name').textContent = 'ডেভেলপার তথ্য';
+  try {
+    const settings = await apiFetch('/api/admin/settings');
+    const content = document.getElementById('main-content');
+    content.innerHTML = `
+      <div style="max-width:700px;margin:0 auto;padding:32px 20px;">
+        <h2 style="margin-bottom:24px;font-size:22px;">ডেভেলপার / যোগাযোগ তথ্য</h2>
+        <p style="color:#aaa;margin-bottom:24px;font-size:14px;">এই তথ্যগুলো মোবাইল অ্যাপে "ডেভেলপার" বাটনে দেখানো হবে।</p>
+        <div class="form-group">
+          <label class="form-label">নাম</label>
+          <input id="s-name" class="form-input" value="${escAttr(settings.dev_name || '')}" placeholder="ডেভেলপারের নাম">
+        </div>
+        <div class="form-group">
+          <label class="form-label">ঠিকানা</label>
+          <input id="s-address" class="form-input" value="${escAttr(settings.dev_address || '')}" placeholder="সম্পূর্ণ ঠিকানা">
+        </div>
+        <div class="form-group">
+          <label class="form-label">মাদ্রাসার নাম</label>
+          <input id="s-madrasa" class="form-input" value="${escAttr(settings.dev_madrasa || '')}" placeholder="মাদ্রাসার নাম">
+        </div>
+        <div class="form-group">
+          <label class="form-label">ফেসবুক লিংক</label>
+          <input id="s-facebook" class="form-input" value="${escAttr(settings.dev_facebook || '')}" placeholder="https://facebook.com/...">
+        </div>
+        <div class="form-group">
+          <label class="form-label">মোবাইল নাম্বার</label>
+          <input id="s-mobile" class="form-input" value="${escAttr(settings.dev_mobile || '')}" placeholder="01XXXXXXXXX">
+        </div>
+        <div class="form-group">
+          <label class="form-label">WhatsApp নাম্বার</label>
+          <input id="s-whatsapp" class="form-input" value="${escAttr(settings.dev_whatsapp || '')}" placeholder="01XXXXXXXXX">
+        </div>
+        <div class="form-group">
+          <label class="form-label">ইমেইল</label>
+          <input id="s-email" class="form-input" value="${escAttr(settings.dev_email || '')}" placeholder="example@email.com">
+        </div>
+        <button class="btn-save-book" onclick="saveDevSettings()" style="margin-top:16px;">সেভ করুন</button>
+      </div>
+    `;
+  } catch { showToast('সেটিংস লোড করতে সমস্যা', 'error'); }
+}
+
+async function saveDevSettings() {
+  try {
+    await apiFetch('/api/admin/settings', {
+      method: 'PUT',
+      body: JSON.stringify({
+        dev_name: document.getElementById('s-name').value,
+        dev_address: document.getElementById('s-address').value,
+        dev_madrasa: document.getElementById('s-madrasa').value,
+        dev_facebook: document.getElementById('s-facebook').value,
+        dev_mobile: document.getElementById('s-mobile').value,
+        dev_whatsapp: document.getElementById('s-whatsapp').value,
+        dev_email: document.getElementById('s-email').value,
+      }),
+    });
+    showToast('ডেভেলপার তথ্য সেভ হয়েছে');
+  } catch { showToast('সেভ করতে সমস্যা', 'error'); }
 }
 
 if (token) { showApp(); }
