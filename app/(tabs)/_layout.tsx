@@ -53,7 +53,7 @@ function ClassicTabLayout() {
             />
           ) : null,
         tabBarLabelStyle: {
-          fontFamily: "Inter_600SemiBold",
+          fontFamily: "SolaimanLipi-Bold",
           fontSize: 11,
         },
       }}

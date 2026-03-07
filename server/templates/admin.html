@@ -319,8 +319,15 @@
     <div id="book-list"></div>
     <button class="btn-new-book" onclick="closeSidebar(); showNewBookForm();">+ নতুন বই যোগ করুন</button>
     <div style="border-top:1px solid var(--border);margin:16px 0 0;padding:14px 16px 0;">
+      <div class="book-item" onclick="closeSidebar(); showSiteSettings();" style="border-radius:8px;">
+        <div style="width:26px;height:34px;background:var(--navy);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:16px;color:#fff;">&#9881;</div>
+        <div class="book-item-info">
+          <div class="book-item-title">সাইট সেটিংস</div>
+          <div class="book-item-meta">প্রতিষ্ঠানের নাম, সাবটাইটেল</div>
+        </div>
+      </div>
       <div class="book-item" onclick="closeSidebar(); showDevSettings();" style="border-radius:8px;">
-        <div style="width:26px;height:34px;background:var(--gold);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:16px;">&#9881;</div>
+        <div style="width:26px;height:34px;background:var(--gold);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:16px;">&#128100;</div>
         <div class="book-item-info">
           <div class="book-item-title">ডেভেলপার তথ্য</div>
           <div class="book-item-meta">নাম, ঠিকানা, যোগাযোগ</div>
@@ -781,6 +788,46 @@ function escHtml(str) {
 }
 function escAttr(str) {
   return String(str || '').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+async function showSiteSettings() {
+  selectedBookId = null;
+  editingChapterId = null;
+  renderBookList();
+  document.getElementById('current-book-name').textContent = 'সাইট সেটিংস';
+  try {
+    const settings = await apiFetch('/api/admin/settings');
+    const content = document.getElementById('main-content');
+    content.innerHTML = `
+      <div style="max-width:700px;margin:0 auto;padding:32px 20px;">
+        <h2 style="margin-bottom:24px;font-size:22px;">সাইট সেটিংস</h2>
+        <p style="color:#aaa;margin-bottom:24px;font-size:14px;">এখানে পরিবর্তন করলে পাবলিক অ্যাপের হোম স্ক্রিনে সাথে সাথে দেখাবে।</p>
+        <div class="form-group">
+          <label class="form-label">প্রতিষ্ঠানের নাম</label>
+          <input id="site-org-name" class="form-input" value="${escAttr(settings.org_name || '')}" placeholder="ইকরা তালিমুল কুরআন বোর্ড বাংলাদেশ">
+        </div>
+        <div class="form-group">
+          <label class="form-label">সাবটাইটেল / ঠিকানা</label>
+          <input id="site-org-subtitle" class="form-input" value="${escAttr(settings.org_subtitle || '')}" placeholder="এলেঙ্গা, টাঙ্গাইল">
+        </div>
+        <button class="btn-save-book" onclick="saveSiteSettings()" style="margin-top:16px;">সেভ করুন</button>
+      </div>
+    `;
+  } catch { showToast('সেটিংস লোড করতে সমস্যা', 'error'); }
+}
+
+async function saveSiteSettings() {
+  try {
+    const data = {
+      org_name: document.getElementById('site-org-name').value,
+      org_subtitle: document.getElementById('site-org-subtitle').value,
+    };
+    await apiFetch('/api/admin/settings', {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+    showToast('সাইট সেটিংস সেভ হয়েছে!');
+  } catch { showToast('সেভ করতে সমস্যা', 'error'); }
 }
 
 async function showDevSettings() {

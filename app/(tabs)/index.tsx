@@ -107,6 +107,13 @@ export default function HomeScreen() {
     queryKey: ["/api/books"],
   });
 
+  const { data: settings } = useQuery<Record<string, string>>({
+    queryKey: ["/api/settings"],
+  });
+
+  const orgName = settings?.org_name || "ইকরা তালিমুল কুরআন বোর্ড বাংলাদেশ";
+  const orgSubtitle = settings?.org_subtitle || "এলেঙ্গা, টাঙ্গাইল";
+
   const topPad = Platform.OS === "web" ? 67 + insets.top : insets.top;
 
   if (isLoading) {
@@ -152,38 +159,36 @@ export default function HomeScreen() {
             <View style={styles.headerRow}>
               <View style={{ flex: 1 }}>
                 <Text style={[styles.headerTitle, { color: isDark ? Colors.darkText : Colors.textDark }]}>
-                  ইকরা তালিমুল কুরআন বোর্ড বাংলাদেশ
+                  {orgName}
                 </Text>
                 <Text style={[styles.headerLabel, { color: isDark ? Colors.darkTextMid : Colors.textLight }]}>
-                  এলেঙ্গা, টাঙ্গাইল
+                  {orgSubtitle}
                 </Text>
               </View>
-              <View style={{ flexDirection: "row", gap: 8 }}>
-                <Pressable
-                  onPress={() => {
-                    if (Platform.OS !== "web") {
-                      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                    }
-                    refetch();
-                  }}
-                  style={[styles.headerIconWrap, { backgroundColor: isDark ? Colors.darkSurface : Colors.white }]}
-                >
-                  <Ionicons name="refresh" size={20} color={Colors.navy} />
-                </Pressable>
-                <Pressable
-                  onPress={() => {
-                    if (Platform.OS !== "web") {
-                      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                    }
-                    router.push("/developer");
-                  }}
-                  style={[styles.headerIconWrap, { backgroundColor: isDark ? Colors.darkSurface : Colors.white }]}
-                >
-                  <Ionicons name="information-circle-outline" size={22} color={Colors.navy} />
-                </Pressable>
-              </View>
+              <Pressable
+                onPress={() => {
+                  if (Platform.OS !== "web") {
+                    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                  }
+                  router.push("/developer");
+                }}
+                style={[styles.headerIconWrap, { backgroundColor: isDark ? Colors.darkSurface : Colors.white }]}
+              >
+                <Ionicons name="information-circle-outline" size={22} color={Colors.navy} />
+              </Pressable>
             </View>
-
+            <Pressable
+              onPress={() => {
+                if (Platform.OS !== "web") {
+                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                }
+                refetch();
+              }}
+              style={[styles.refreshBtn, { backgroundColor: isDark ? Colors.darkSurface : Colors.white }]}
+            >
+              <Ionicons name="refresh" size={18} color={Colors.navy} />
+              <Text style={[styles.refreshBtnText, { color: isDark ? Colors.darkText : Colors.textDark }]}>রিফ্রেশ</Text>
+            </Pressable>
           </View>
         }
         ListEmptyComponent={
@@ -251,6 +256,25 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.08,
     shadowRadius: 6,
     elevation: 3,
+  },
+  refreshBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    alignSelf: "flex-start",
+    gap: 6,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 20,
+    marginTop: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.06,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  refreshBtnText: {
+    fontFamily: "SolaimanLipi",
+    fontSize: 13,
   },
   infoBanner: {
     borderRadius: 14,
