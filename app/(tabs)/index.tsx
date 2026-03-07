@@ -162,17 +162,6 @@ export default function HomeScreen() {
               </View>
             </View>
 
-            <LinearGradient
-              colors={["#1E3A5F", "#2C5282"]}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 1 }}
-              style={styles.infoBanner}
-            >
-              <Ionicons name="information-circle" size={20} color="rgba(255,255,255,0.9)" />
-              <Text style={styles.infoBannerText}>
-                বই নির্বাচন করুন এবং অধ্যায় পড়ুন
-              </Text>
-            </LinearGradient>
           </View>
         }
         ListEmptyComponent={
