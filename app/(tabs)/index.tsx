@@ -149,12 +149,12 @@ export default function HomeScreen() {
         ListHeaderComponent={
           <View style={styles.listHeader}>
             <View style={styles.headerRow}>
-              <View>
-                <Text style={[styles.headerLabel, { color: isDark ? Colors.darkTextMid : Colors.textLight }]}>
-                  আমার পাঠশালা
-                </Text>
+              <View style={{ flex: 1 }}>
                 <Text style={[styles.headerTitle, { color: isDark ? Colors.darkText : Colors.textDark }]}>
-                  বইয়ের তালিকা
+                  ইকরা তালিমুল কুরআন বোর্ড বাংলাদেশ
+                </Text>
+                <Text style={[styles.headerLabel, { color: isDark ? Colors.darkTextMid : Colors.textLight }]}>
+                  এলেঙ্গা, টাঙ্গাইল
                 </Text>
               </View>
               <View style={[styles.headerIconWrap, { backgroundColor: isDark ? Colors.darkSurface : Colors.white }]}>
@@ -220,15 +220,14 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   headerLabel: {
-    fontFamily: "Inter_500Medium",
+    fontFamily: "Inter_400Regular",
     fontSize: 12,
-    textTransform: "uppercase",
-    letterSpacing: 1.5,
-    marginBottom: 4,
+    marginTop: 2,
   },
   headerTitle: {
     fontFamily: "Inter_700Bold",
-    fontSize: 26,
+    fontSize: 20,
+    lineHeight: 28,
   },
   headerIconWrap: {
     width: 48,
