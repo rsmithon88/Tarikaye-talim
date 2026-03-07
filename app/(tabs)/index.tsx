@@ -231,12 +231,12 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   headerLabel: {
-    fontFamily: "Inter_400Regular",
+    fontFamily: "SolaimanLipi",
     fontSize: 12,
     marginTop: 2,
   },
   headerTitle: {
-    fontFamily: "Inter_700Bold",
+    fontFamily: "SolaimanLipi-Bold",
     fontSize: 20,
     lineHeight: 28,
   },
@@ -262,7 +262,7 @@ const styles = StyleSheet.create({
   },
   infoBannerText: {
     color: "rgba(255,255,255,0.95)",
-    fontFamily: "Inter_500Medium",
+    fontFamily: "SolaimanLipi",
     fontSize: 13,
     flex: 1,
     lineHeight: 20,
@@ -298,14 +298,14 @@ const styles = StyleSheet.create({
   },
   bookCardTitle: {
     color: "white",
-    fontFamily: "Inter_700Bold",
+    fontFamily: "SolaimanLipi-Bold",
     fontSize: 17,
     lineHeight: 24,
     marginBottom: 4,
   },
   bookCardAuthor: {
     color: "rgba(255,255,255,0.75)",
-    fontFamily: "Inter_400Regular",
+    fontFamily: "SolaimanLipi",
     fontSize: 13,
     marginBottom: 8,
   },
@@ -321,7 +321,7 @@ const styles = StyleSheet.create({
   },
   bookChapterCount: {
     color: "rgba(255,255,255,0.9)",
-    fontFamily: "Inter_500Medium",
+    fontFamily: "SolaimanLipi",
     fontSize: 11,
   },
   bookCardRight: {
@@ -374,16 +374,16 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   emptyTitle: {
-    fontFamily: "Inter_700Bold",
+    fontFamily: "SolaimanLipi-Bold",
     fontSize: 20,
   },
   emptyText: {
-    fontFamily: "Inter_400Regular",
+    fontFamily: "SolaimanLipi",
     fontSize: 15,
     textAlign: "center",
   },
   errorText: {
-    fontFamily: "Inter_500Medium",
+    fontFamily: "SolaimanLipi",
     fontSize: 15,
   },
   retryBtn: {
@@ -394,7 +394,7 @@ const styles = StyleSheet.create({
   },
   retryText: {
     color: "white",
-    fontFamily: "Inter_600SemiBold",
+    fontFamily: "SolaimanLipi-Bold",
     fontSize: 15,
   },
 });

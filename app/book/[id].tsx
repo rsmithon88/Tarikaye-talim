@@ -274,7 +274,7 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   errorText: {
-    fontFamily: "Inter_600SemiBold",
+    fontFamily: "SolaimanLipi-Bold",
     fontSize: 16,
   },
   listContent: {
@@ -325,14 +325,14 @@ const styles = StyleSheet.create({
   },
   heroTitle: {
     color: "white",
-    fontFamily: "Inter_700Bold",
+    fontFamily: "SolaimanLipi-Bold",
     fontSize: 20,
     lineHeight: 28,
     marginBottom: 4,
   },
   heroAuthor: {
     color: "rgba(255,255,255,0.75)",
-    fontFamily: "Inter_500Medium",
+    fontFamily: "SolaimanLipi",
     fontSize: 13,
     marginBottom: 10,
   },
@@ -351,7 +351,7 @@ const styles = StyleSheet.create({
   },
   heroStatText: {
     color: "rgba(255,255,255,0.9)",
-    fontFamily: "Inter_500Medium",
+    fontFamily: "SolaimanLipi",
     fontSize: 12,
   },
   descCard: {
@@ -369,7 +369,7 @@ const styles = StyleSheet.create({
     elevation: 1,
   },
   descText: {
-    fontFamily: "Inter_400Regular",
+    fontFamily: "SolaimanLipi",
     fontSize: 14,
     lineHeight: 22,
     flex: 1,
@@ -381,11 +381,11 @@ const styles = StyleSheet.create({
     marginBottom: 14,
   },
   sectionTitle: {
-    fontFamily: "Inter_700Bold",
+    fontFamily: "SolaimanLipi-Bold",
     fontSize: 19,
   },
   sectionCount: {
-    fontFamily: "Inter_500Medium",
+    fontFamily: "SolaimanLipi",
     fontSize: 14,
   },
   chapterCard: {
@@ -444,12 +444,12 @@ const styles = StyleSheet.create({
   },
   chapterNumText: {
     color: "white",
-    fontFamily: "Inter_700Bold",
+    fontFamily: "SolaimanLipi-Bold",
     fontSize: 13,
   },
   chapterTitle: {
     color: "white",
-    fontFamily: "Inter_600SemiBold",
+    fontFamily: "SolaimanLipi-Bold",
     fontSize: 15,
     lineHeight: 22,
     flex: 1,
@@ -468,7 +468,7 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   emptyText: {
-    fontFamily: "Inter_400Regular",
+    fontFamily: "SolaimanLipi",
     fontSize: 15,
   },
 });

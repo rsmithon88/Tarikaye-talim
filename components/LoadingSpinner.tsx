@@ -142,7 +142,7 @@ const s = StyleSheet.create({
   },
   loadingText: {
     fontSize: 15,
-    fontFamily: "Inter_500Medium",
+    fontFamily: "SolaimanLipi",
     letterSpacing: 1,
   },
   dotsRow: {

@@ -191,11 +191,11 @@ const s = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 18,
-    fontFamily: "Inter_600SemiBold",
+    fontFamily: "SolaimanLipi-Bold",
   },
   loadingWrap: { flex: 1, justifyContent: "center", alignItems: "center" },
   emptyWrap: { flex: 1, justifyContent: "center", alignItems: "center", gap: 12, paddingBottom: 60 },
-  emptyText: { fontSize: 15, fontFamily: "Inter_400Regular" },
+  emptyText: { fontSize: 15, fontFamily: "SolaimanLipi" },
   scrollContent: { paddingHorizontal: 16, paddingBottom: 40 },
   profileCard: {
     borderRadius: 16,
@@ -227,12 +227,12 @@ const s = StyleSheet.create({
   },
   profileName: {
     fontSize: 20,
-    fontFamily: "Inter_700Bold",
+    fontFamily: "SolaimanLipi-Bold",
     textAlign: "center",
   },
   profileMadrasa: {
     fontSize: 14,
-    fontFamily: "Inter_400Regular",
+    fontFamily: "SolaimanLipi",
     marginTop: 4,
     textAlign: "center",
   },
@@ -257,6 +257,6 @@ const s = StyleSheet.create({
     justifyContent: "center",
   },
   infoTextWrap: { flex: 1 },
-  infoLabel: { fontSize: 12, fontFamily: "Inter_400Regular", marginBottom: 2 },
-  infoValue: { fontSize: 15, fontFamily: "Inter_500Medium" },
+  infoLabel: { fontSize: 12, fontFamily: "SolaimanLipi", marginBottom: 2 },
+  infoValue: { fontSize: 15, fontFamily: "SolaimanLipi" },
 });

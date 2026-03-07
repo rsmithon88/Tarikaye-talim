@@ -95,7 +95,7 @@ export default function ChapterReaderScreen() {
     return (
       <View style={[styles.center, { backgroundColor: isDark ? Colors.darkBg : Colors.cream }]}>
         <Ionicons name="alert-circle-outline" size={48} color={Colors.textLight} />
-        <Text style={{ color: isDark ? Colors.darkText : Colors.textDark, fontFamily: "Inter_600SemiBold" }}>
+        <Text style={{ color: isDark ? Colors.darkText : Colors.textDark, fontFamily: "SolaimanLipi-Bold" }}>
           অধ্যায় খুঁজে পাওয়া যায়নি
         </Text>
       </View>
@@ -260,7 +260,7 @@ const styles = StyleSheet.create({
     flexShrink: 0,
   },
   chapterTitleText: {
-    fontFamily: "Inter_500Medium",
+    fontFamily: "SolaimanLipi",
     fontSize: 13,
     flex: 1,
   },
@@ -278,11 +278,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   fontBtnText: {
-    fontFamily: "Inter_500Medium",
+    fontFamily: "SolaimanLipi",
     fontSize: 13,
   },
   fontBtnTextLg: {
-    fontFamily: "Inter_700Bold",
+    fontFamily: "SolaimanLipi-Bold",
     fontSize: 18,
   },
   scrollView: {
@@ -296,7 +296,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   bookNameLabel: {
-    fontFamily: "Inter_500Medium",
+    fontFamily: "SolaimanLipi",
     fontSize: 12,
     textTransform: "uppercase",
     letterSpacing: 1.2,
@@ -304,7 +304,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   chapterHeading: {
-    fontFamily: "Inter_700Bold",
+    fontFamily: "SolaimanLipi-Bold",
     fontSize: 24,
     lineHeight: 34,
     textAlign: "center",
@@ -318,7 +318,7 @@ const styles = StyleSheet.create({
     marginBottom: 32,
   },
   chapterContent: {
-    fontFamily: "Inter_400Regular",
+    fontFamily: "SolaimanLipi",
     textAlign: "justify",
   },
   emptyContent: {
@@ -327,7 +327,7 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   emptyText: {
-    fontFamily: "Inter_400Regular",
+    fontFamily: "SolaimanLipi",
     fontSize: 15,
   },
   endMark: {
@@ -357,7 +357,7 @@ const styles = StyleSheet.create({
   },
   backToBookText: {
     color: "white",
-    fontFamily: "Inter_600SemiBold",
+    fontFamily: "SolaimanLipi-Bold",
     fontSize: 15,
   },
 });
