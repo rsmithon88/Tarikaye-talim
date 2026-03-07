@@ -16,6 +16,7 @@ import { router } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import Colors from "@/constants/colors";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 interface DevSettings {
   dev_name: string;
@@ -99,7 +100,7 @@ export default function DeveloperScreen() {
 
       {isLoading ? (
         <View style={s.loadingWrap}>
-          <ActivityIndicator size="large" color={Colors.navy} />
+          <LoadingSpinner />
         </View>
       ) : !hasAnyInfo ? (
         <View style={s.emptyWrap}>

@@ -17,6 +17,7 @@ import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect } from "react";
 import Colors from "@/constants/colors";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 interface Chapter {
   id: number;
@@ -85,7 +86,7 @@ export default function ChapterReaderScreen() {
   if (isLoading) {
     return (
       <View style={[styles.center, { backgroundColor: isDark ? Colors.darkBg : Colors.cream }]}>
-        <ActivityIndicator size="large" color={Colors.navy} />
+        <LoadingSpinner />
       </View>
     );
   }

@@ -17,6 +17,7 @@ import * as Haptics from "expo-haptics";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import Colors from "@/constants/colors";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 interface Book {
   id: number;
@@ -119,7 +120,7 @@ export default function BookDetailScreen() {
   if (bookLoading) {
     return (
       <View style={[styles.center, { backgroundColor: isDark ? Colors.darkBg : Colors.cream }]}>
-        <ActivityIndicator size="large" color={Colors.navy} />
+        <LoadingSpinner />
       </View>
     );
   }
@@ -201,7 +202,9 @@ export default function BookDetailScreen() {
       {chaptersLoading ? (
         <View style={styles.center}>
           {renderHeader()}
-          <ActivityIndicator size="small" color={Colors.navy} style={{ marginTop: 20 }} />
+          <View style={{ marginTop: 20 }}>
+            <LoadingSpinner size="small" showText={false} />
+          </View>
         </View>
       ) : (
         <FlatList
