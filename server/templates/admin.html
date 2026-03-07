@@ -9,7 +9,6 @@
   :root {
     --navy: #1E3A5F;
     --gold: #C9A84C;
-    --gold-light: #F0D080;
     --bg: #F5F3EE;
     --surface: #FFFFFF;
     --surface2: #F0EDE6;
@@ -28,60 +27,29 @@
     min-height: 100vh;
   }
 
-  /* Login Screen */
+  /* Login */
   #login-screen {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    padding: 20px;
+    display: flex; align-items: center; justify-content: center;
+    min-height: 100vh; padding: 20px;
   }
   .login-card {
-    background: var(--surface);
-    border-radius: 20px;
-    padding: 48px 40px;
-    width: 100%;
-    max-width: 420px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
-    text-align: center;
+    background: var(--surface); border-radius: 20px;
+    padding: 48px 40px; width: 100%; max-width: 420px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.12); text-align: center;
   }
-  .login-card .book-icon {
-    font-size: 64px;
-    margin-bottom: 16px;
-  }
-  .login-card h1 {
-    font-size: 24px;
-    font-weight: 700;
-    color: var(--navy);
-    margin-bottom: 8px;
-  }
-  .login-card p {
-    color: var(--text2);
-    font-size: 14px;
-    margin-bottom: 32px;
-  }
+  .login-card .book-icon { font-size: 64px; margin-bottom: 16px; }
+  .login-card h1 { font-size: 24px; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+  .login-card p { color: var(--text2); font-size: 14px; margin-bottom: 32px; }
   .login-card input {
-    width: 100%;
-    padding: 14px 16px;
-    border: 2px solid var(--border);
-    border-radius: var(--radius);
-    font-size: 16px;
-    outline: none;
-    transition: border-color 0.2s;
-    margin-bottom: 16px;
+    width: 100%; padding: 14px 16px; border: 2px solid var(--border);
+    border-radius: var(--radius); font-size: 16px; outline: none;
+    transition: border-color 0.2s; margin-bottom: 16px;
   }
   .login-card input:focus { border-color: var(--navy); }
   .btn-primary {
-    width: 100%;
-    padding: 14px;
-    background: var(--navy);
-    color: white;
-    border: none;
-    border-radius: var(--radius);
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: opacity 0.2s, transform 0.1s;
+    width: 100%; padding: 14px; background: var(--navy); color: white;
+    border: none; border-radius: var(--radius); font-size: 16px;
+    font-weight: 600; cursor: pointer; transition: opacity 0.2s;
   }
   .btn-primary:hover { opacity: 0.9; }
   .btn-primary:active { transform: scale(0.98); }
@@ -89,119 +57,94 @@
 
   /* Main App */
   #main-app { display: none; }
+
+  /* Header */
   .header {
-    background: var(--navy);
-    color: white;
-    padding: 0 24px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 64px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
+    background: var(--navy); color: white; padding: 0 20px;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 60px; position: sticky; top: 0; z-index: 200;
     box-shadow: 0 2px 8px rgba(0,0,0,0.15);
   }
-  .header h1 { font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
-  .header-right { display: flex; align-items: center; gap: 12px; }
+  .header-left { display: flex; align-items: center; gap: 14px; }
+  .header h1 { font-size: 17px; font-weight: 700; }
+  .header-right { display: flex; align-items: center; gap: 10px; }
+  .btn-hamburger {
+    background: none; border: none; color: white; cursor: pointer;
+    width: 40px; height: 40px; display: flex; align-items: center;
+    justify-content: center; border-radius: 8px; transition: background 0.2s;
+    font-size: 22px;
+  }
+  .btn-hamburger:hover { background: rgba(255,255,255,0.15); }
   .btn-logout {
-    background: rgba(255,255,255,0.15);
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: background 0.2s;
+    background: rgba(255,255,255,0.15); color: white; border: none;
+    padding: 7px 14px; border-radius: 8px; cursor: pointer;
+    font-size: 13px; transition: background 0.2s;
   }
   .btn-logout:hover { background: rgba(255,255,255,0.25); }
 
-  .layout { display: flex; min-height: calc(100vh - 64px); }
+  /* Sidebar Overlay */
+  .sidebar-overlay {
+    display: none; position: fixed; top: 60px; left: 0; right: 0;
+    bottom: 0; background: rgba(0,0,0,0.4); z-index: 300;
+    animation: fadeIn 0.2s;
+  }
+  .sidebar-overlay.show { display: block; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-  /* Sidebar */
   .sidebar {
-    width: 280px;
-    background: var(--surface);
-    border-right: 1px solid var(--border);
-    padding: 20px 0;
-    flex-shrink: 0;
-    overflow-y: auto;
-    height: calc(100vh - 64px);
-    position: sticky;
-    top: 64px;
+    position: fixed; top: 60px; left: -320px; width: 300px;
+    height: calc(100vh - 60px); background: var(--surface);
+    border-right: 1px solid var(--border); z-index: 400;
+    transition: left 0.3s ease; overflow-y: auto;
+    box-shadow: 4px 0 20px rgba(0,0,0,0.15); padding: 16px 0;
   }
-  .sidebar-title {
-    font-size: 11px;
-    font-weight: 700;
-    color: var(--text2);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    padding: 0 20px 12px;
+  .sidebar.open { left: 0; }
+  .sidebar-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 16px 14px; border-bottom: 1px solid var(--border); margin-bottom: 12px;
   }
+  .sidebar-header h2 { font-size: 16px; font-weight: 700; color: var(--navy); }
+  .btn-close-sidebar {
+    background: none; border: none; cursor: pointer; font-size: 20px;
+    color: var(--text2); width: 36px; height: 36px; display: flex;
+    align-items: center; justify-content: center; border-radius: 8px;
+  }
+  .btn-close-sidebar:hover { background: var(--surface2); }
+
   .book-item {
-    padding: 12px 20px;
-    cursor: pointer;
-    transition: background 0.15s;
-    border-left: 3px solid transparent;
-    display: flex;
-    align-items: center;
-    gap: 10px;
+    padding: 12px 16px; cursor: pointer; transition: background 0.15s;
+    border-left: 3px solid transparent; display: flex; align-items: center; gap: 10px;
   }
   .book-item:hover { background: var(--surface2); }
-  .book-item.active {
-    background: #EAF0F8;
-    border-left-color: var(--navy);
-  }
-  .book-item-color {
-    width: 28px;
-    height: 36px;
-    border-radius: 4px;
-    flex-shrink: 0;
-  }
+  .book-item.active { background: #EAF0F8; border-left-color: var(--navy); }
+  .book-item-color { width: 26px; height: 34px; border-radius: 4px; flex-shrink: 0; }
   .book-item-info { flex: 1; min-width: 0; }
   .book-item-title {
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--text);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    font-size: 14px; font-weight: 600; color: var(--text);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
   .book-item-meta { font-size: 12px; color: var(--text2); }
   .badge-draft {
-    font-size: 10px;
-    background: #FFF3E0;
-    color: #E65100;
-    padding: 2px 7px;
-    border-radius: 20px;
-    font-weight: 600;
+    font-size: 10px; background: #FFF3E0; color: #E65100;
+    padding: 2px 7px; border-radius: 20px; font-weight: 600;
   }
   .btn-new-book {
-    margin: 12px 20px 0;
-    width: calc(100% - 40px);
-    padding: 10px;
-    background: var(--gold);
-    color: var(--navy);
-    border: none;
-    border-radius: var(--radius);
-    font-size: 14px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: opacity 0.2s;
+    margin: 14px 16px 0; width: calc(100% - 32px); padding: 10px;
+    background: var(--gold); color: var(--navy); border: none;
+    border-radius: var(--radius); font-size: 14px; font-weight: 700;
+    cursor: pointer; transition: opacity 0.2s;
   }
   .btn-new-book:hover { opacity: 0.85; }
 
-  /* Content Area */
-  .content { flex: 1; padding: 32px; overflow-y: auto; max-width: 900px; }
+  /* Full Page Content */
+  .content {
+    padding: 28px; max-width: 900px; margin: 0 auto; min-height: calc(100vh - 60px);
+  }
 
-  /* Welcome state */
+  /* Welcome */
   .welcome-state {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 80px 20px;
-    text-align: center;
+    display: flex; flex-direction: column; align-items: center;
+    justify-content: center; padding: 80px 20px; text-align: center;
   }
   .welcome-state .big-icon { font-size: 80px; margin-bottom: 24px; }
   .welcome-state h2 { font-size: 24px; color: var(--navy); margin-bottom: 12px; }
@@ -209,34 +152,20 @@
 
   /* Book Editor */
   .section-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 24px;
+    display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px;
   }
   .section-header h2 { font-size: 22px; font-weight: 700; color: var(--navy); }
-
   .card {
-    background: var(--surface);
-    border-radius: var(--radius);
-    padding: 24px;
-    box-shadow: var(--shadow);
-    margin-bottom: 24px;
+    background: var(--surface); border-radius: var(--radius);
+    padding: 24px; box-shadow: var(--shadow); margin-bottom: 24px;
   }
   .card h3 { font-size: 16px; font-weight: 700; margin-bottom: 20px; color: var(--text); }
   .form-row { margin-bottom: 16px; }
   .form-row label { display: block; font-size: 13px; font-weight: 600; color: var(--text2); margin-bottom: 6px; }
   .form-row input, .form-row textarea, .form-row select {
-    width: 100%;
-    padding: 12px 14px;
-    border: 1.5px solid var(--border);
-    border-radius: 8px;
-    font-size: 15px;
-    color: var(--text);
-    background: var(--bg);
-    outline: none;
-    transition: border-color 0.2s;
-    font-family: inherit;
+    width: 100%; padding: 12px 14px; border: 1.5px solid var(--border);
+    border-radius: 8px; font-size: 15px; color: var(--text);
+    background: var(--bg); outline: none; transition: border-color 0.2s; font-family: inherit;
   }
   .form-row input:focus, .form-row textarea:focus { border-color: var(--navy); background: white; }
   .form-row textarea { resize: vertical; min-height: 80px; }
@@ -244,205 +173,115 @@
 
   .color-row { display: flex; align-items: center; gap: 12px; }
   .color-preview {
-    width: 40px;
-    height: 40px;
-    border-radius: 8px;
-    border: 2px solid var(--border);
-    flex-shrink: 0;
+    width: 40px; height: 40px; border-radius: 8px;
+    border: 2px solid var(--border); flex-shrink: 0;
   }
   .color-row input[type=color] { width: 50px; height: 40px; padding: 2px; cursor: pointer; border-radius: 8px; }
 
   .form-actions { display: flex; gap: 12px; justify-content: flex-end; margin-top: 20px; }
   .btn-save {
-    padding: 10px 24px;
-    background: var(--navy);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: opacity 0.2s;
+    padding: 10px 24px; background: var(--navy); color: white; border: none;
+    border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; transition: opacity 0.2s;
   }
   .btn-save:hover { opacity: 0.9; }
   .btn-danger {
-    padding: 10px 20px;
-    background: #FFF0F0;
-    color: var(--danger);
-    border: 1.5px solid #FFCDD2;
-    border-radius: 8px;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.2s;
+    padding: 10px 20px; background: #FFF0F0; color: var(--danger);
+    border: 1.5px solid #FFCDD2; border-radius: 8px; font-size: 15px;
+    font-weight: 600; cursor: pointer; transition: background 0.2s;
   }
   .btn-danger:hover { background: #FFEBEE; }
   .btn-secondary {
-    padding: 10px 20px;
-    background: var(--surface2);
-    color: var(--text);
-    border: 1.5px solid var(--border);
-    border-radius: 8px;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.2s;
+    padding: 10px 20px; background: var(--surface2); color: var(--text);
+    border: 1.5px solid var(--border); border-radius: 8px; font-size: 15px;
+    font-weight: 600; cursor: pointer; transition: background 0.2s;
   }
   .btn-secondary:hover { background: var(--border); }
 
   /* Chapters */
   .chapter-list { display: flex; flex-direction: column; gap: 10px; }
   .chapter-row {
-    background: var(--surface2);
-    border-radius: 10px;
-    padding: 14px 16px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    cursor: pointer;
-    transition: background 0.15s;
-    border: 1.5px solid transparent;
+    background: var(--surface2); border-radius: 10px; padding: 14px 16px;
+    display: flex; align-items: center; gap: 12px; cursor: pointer;
+    transition: background 0.15s; border: 1.5px solid transparent;
   }
   .chapter-row:hover { background: #EAF0F8; border-color: #C0D0E8; }
   .chapter-row.active { background: #EAF0F8; border-color: var(--navy); }
   .chapter-num {
-    width: 32px;
-    height: 32px;
-    background: var(--navy);
-    color: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 13px;
-    font-weight: 700;
-    flex-shrink: 0;
+    width: 32px; height: 32px; background: var(--navy); color: white;
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700; flex-shrink: 0;
   }
   .chapter-title { font-size: 15px; font-weight: 600; flex: 1; }
   .chapter-actions { display: flex; gap: 6px; }
   .btn-icon {
-    width: 32px;
-    height: 32px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 16px;
-    transition: background 0.15s;
-    background: transparent;
+    width: 32px; height: 32px; border: none; border-radius: 8px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; font-size: 16px;
+    transition: background 0.15s; background: transparent;
   }
   .btn-icon.edit:hover { background: #E3F2FD; }
   .btn-icon.del:hover { background: #FFEBEE; }
 
   /* Chapter Editor */
   .chapter-editor {
-    background: var(--surface);
-    border-radius: var(--radius);
-    padding: 24px;
-    box-shadow: var(--shadow);
-    margin-top: 20px;
+    background: var(--surface); border-radius: var(--radius);
+    padding: 24px; box-shadow: var(--shadow); margin-top: 20px;
   }
   .chapter-editor textarea {
-    width: 100%;
-    min-height: 300px;
-    padding: 16px;
-    border: 1.5px solid var(--border);
-    border-radius: 8px;
-    font-size: 16px;
-    line-height: 1.8;
-    color: var(--text);
-    background: var(--bg);
-    resize: vertical;
-    font-family: Georgia, 'Times New Roman', serif;
-    outline: none;
+    width: 100%; min-height: 300px; padding: 16px;
+    border: 1.5px solid var(--border); border-radius: 8px;
+    font-size: 16px; line-height: 1.8; color: var(--text);
+    background: var(--bg); resize: vertical;
+    font-family: Georgia, 'Times New Roman', serif; outline: none;
     transition: border-color 0.2s;
   }
   .chapter-editor textarea:focus { border-color: var(--navy); background: white; }
 
   /* Toggle */
   .toggle-row { display: flex; align-items: center; gap: 12px; }
-  .toggle {
-    position: relative;
-    width: 48px;
-    height: 26px;
-  }
+  .toggle { position: relative; width: 48px; height: 26px; }
   .toggle input { opacity: 0; width: 0; height: 0; }
   .toggle-slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: #ccc;
-    border-radius: 26px;
-    transition: 0.3s;
+    position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+    background: #ccc; border-radius: 26px; transition: 0.3s;
   }
   .toggle-slider::before {
-    content: '';
-    position: absolute;
-    height: 20px; width: 20px;
-    left: 3px; bottom: 3px;
-    background: white;
-    border-radius: 50%;
-    transition: 0.3s;
+    content: ''; position: absolute; height: 20px; width: 20px;
+    left: 3px; bottom: 3px; background: white; border-radius: 50%; transition: 0.3s;
   }
   .toggle input:checked + .toggle-slider { background: var(--navy); }
   .toggle input:checked + .toggle-slider::before { transform: translateX(22px); }
 
-  /* Book cover preview */
-  .cover-preview {
-    width: 80px;
-    height: 110px;
-    border-radius: 8px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-end;
-    padding: 10px;
-    box-shadow: 4px 4px 12px rgba(0,0,0,0.2);
-  }
-  .cover-preview-text { color: white; font-size: 9px; font-weight: 700; text-align: center; opacity: 0.9; }
-
   /* Toast */
   .toast {
-    position: fixed;
-    bottom: 24px;
-    right: 24px;
-    padding: 14px 20px;
-    border-radius: 10px;
-    font-size: 14px;
-    font-weight: 600;
-    color: white;
-    z-index: 1000;
-    transform: translateY(80px);
-    opacity: 0;
-    transition: all 0.3s ease;
-    pointer-events: none;
+    position: fixed; bottom: 24px; right: 24px; padding: 14px 20px;
+    border-radius: 10px; font-size: 14px; font-weight: 600; color: white;
+    z-index: 1000; transform: translateY(80px); opacity: 0;
+    transition: all 0.3s ease; pointer-events: none;
   }
   .toast.show { transform: translateY(0); opacity: 1; }
   .toast.success { background: var(--success); }
   .toast.error { background: var(--danger); }
 
-  /* Empty state */
-  .empty-chapters {
-    text-align: center;
-    padding: 40px 20px;
-    color: var(--text2);
-  }
+  .empty-chapters { text-align: center; padding: 40px 20px; color: var(--text2); }
   .empty-chapters .icon { font-size: 48px; margin-bottom: 12px; }
   .empty-chapters p { font-size: 14px; }
 
-  /* Responsive */
+  /* Current book indicator in header */
+  .current-book-name {
+    font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.7);
+    max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+
   @media (max-width: 768px) {
-    .sidebar { width: 220px; }
-    .content { padding: 20px; }
+    .content { padding: 16px; }
     .form-grid { grid-template-columns: 1fr; }
+    .sidebar { width: 280px; }
   }
 </style>
 </head>
 <body>
 
-<!-- Login Screen -->
+<!-- Login -->
 <div id="login-screen">
   <div class="login-card">
     <div class="book-icon">📚</div>
@@ -457,24 +296,35 @@
 <!-- Main App -->
 <div id="main-app">
   <div class="header">
-    <h1>📚 বই ম্যানেজমেন্ট</h1>
+    <div class="header-left">
+      <button class="btn-hamburger" onclick="toggleSidebar()" title="বই তালিকা">&#9776;</button>
+      <h1>📚 বই ম্যানেজমেন্ট</h1>
+      <span class="current-book-name" id="current-book-name"></span>
+    </div>
     <div class="header-right">
-      <span id="header-count" style="color:rgba(255,255,255,0.7);font-size:13px;"></span>
       <button class="btn-logout" onclick="logout()">লগআউট</button>
     </div>
   </div>
-  <div class="layout">
-    <div class="sidebar">
-      <div class="sidebar-title">সব বই</div>
-      <div id="book-list"></div>
-      <button class="btn-new-book" onclick="showNewBookForm()">+ নতুন বই যোগ করুন</button>
+
+  <!-- Sidebar Overlay -->
+  <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+
+  <!-- Sidebar Drawer -->
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <h2>সব বই</h2>
+      <button class="btn-close-sidebar" onclick="closeSidebar()">&#10005;</button>
     </div>
-    <div class="content" id="main-content">
-      <div class="welcome-state">
-        <div class="big-icon">📖</div>
-        <h2>স্বাগতম!</h2>
-        <p>বামদিক থেকে একটি বই নির্বাচন করুন অথবা<br>নতুন বই যোগ করুন।</p>
-      </div>
+    <div id="book-list"></div>
+    <button class="btn-new-book" onclick="closeSidebar(); showNewBookForm();">+ নতুন বই যোগ করুন</button>
+  </div>
+
+  <!-- Full Page Content -->
+  <div class="content" id="main-content">
+    <div class="welcome-state">
+      <div class="big-icon">📖</div>
+      <h2>স্বাগতম!</h2>
+      <p>উপরের ☰ মেনু থেকে একটি বই নির্বাচন করুন<br>অথবা নতুন বই যোগ করুন।</p>
     </div>
   </div>
 </div>
@@ -487,6 +337,15 @@ let books = [];
 let selectedBookId = null;
 let editingChapterId = null;
 let chapters = [];
+
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sidebar-overlay').classList.toggle('show');
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebar-overlay').classList.remove('show');
+}
 
 async function apiFetch(url, opts = {}) {
   const res = await fetch(url, {
@@ -530,7 +389,6 @@ async function loadBooks() {
   try {
     books = await apiFetch('/api/admin/books');
     renderBookList();
-    document.getElementById('header-count').textContent = `${books.length}টি বই`;
   } catch (e) {
     showToast('বই লোড করতে সমস্যা', 'error');
   }
@@ -546,7 +404,7 @@ function renderBookList() {
   books.forEach(book => {
     const el = document.createElement('div');
     el.className = 'book-item' + (book.id === selectedBookId ? ' active' : '');
-    el.onclick = () => selectBook(book.id);
+    el.onclick = () => { closeSidebar(); selectBook(book.id); };
     el.innerHTML = `
       <div class="book-item-color" style="background:${book.cover_color}"></div>
       <div class="book-item-info">
@@ -564,6 +422,7 @@ async function selectBook(bookId) {
   renderBookList();
   const book = books.find(b => b.id === bookId);
   if (!book) return;
+  document.getElementById('current-book-name').textContent = book.title;
   try {
     chapters = await apiFetch(`/api/admin/books/${bookId}/chapters`);
     renderBookEditor(book);
@@ -654,8 +513,8 @@ function renderChapterList() {
       <div class="chapter-num">${i + 1}</div>
       <div class="chapter-title">${escHtml(ch.title)}</div>
       <div class="chapter-actions" onclick="event.stopPropagation()">
-        <button class="btn-icon edit" onclick="editChapter(${ch.id})" title="সম্পাদনা">✏️</button>
-        <button class="btn-icon del" onclick="confirmDeleteChapter(${ch.id})" title="মুছুন">🗑️</button>
+        <button class="btn-icon edit" onclick="editChapter(${ch.id})" title="সম্পাদনা">&#9998;</button>
+        <button class="btn-icon del" onclick="confirmDeleteChapter(${ch.id})" title="মুছুন">&#128465;</button>
       </div>
     </div>
   `).join('') + `</div>`;
@@ -742,6 +601,7 @@ async function saveBook(bookId) {
     await apiFetch(`/api/admin/books/${bookId}`, { method: 'PUT', body: JSON.stringify(data) });
     showToast('সংরক্ষিত হয়েছে!', 'success');
     await loadBooks();
+    document.getElementById('current-book-name').textContent = data.title;
     const book = books.find(b => b.id === bookId);
     if (book) renderBookEditor(book);
   } catch { showToast('সংরক্ষণে সমস্যা', 'error'); }
@@ -774,8 +634,9 @@ async function createNewChapter() {
     await apiFetch(`/api/admin/books/${selectedBookId}/chapters`, { method: 'POST', body: JSON.stringify(data) });
     showToast('অধ্যায় যোগ হয়েছে!', 'success');
     chapters = await apiFetch(`/api/admin/books/${selectedBookId}/chapters`);
-    document.getElementById('chapter-list').innerHTML = renderChapterList();
-    document.getElementById('chapter-editor-container').innerHTML = '';
+    const book = books.find(b => b.id === selectedBookId);
+    await loadBooks();
+    if (book) renderBookEditor(books.find(b => b.id === selectedBookId) || book);
   } catch { showToast('সমস্যা হয়েছে', 'error'); }
 }
 
@@ -783,6 +644,7 @@ function showNewBookForm() {
   selectedBookId = null;
   editingChapterId = null;
   renderBookList();
+  document.getElementById('current-book-name').textContent = '';
   const content = document.getElementById('main-content');
   content.innerHTML = `
     <div class="section-header">
@@ -828,11 +690,21 @@ function showNewBookForm() {
         </div>
       </div>
       <div class="form-actions">
-        <button class="btn-secondary" onclick="loadBooks().then(()=>document.getElementById('main-content').innerHTML='<div class=welcome-state><div class=big-icon>📖</div><h2>স্বাগতম!</h2><p>একটি বই নির্বাচন করুন।</p></div>')">বাতিল</button>
+        <button class="btn-secondary" onclick="showWelcome()">বাতিল</button>
         <button class="btn-save" onclick="createNewBook()">বই তৈরি করুন</button>
       </div>
     </div>
   `;
+}
+
+function showWelcome() {
+  document.getElementById('main-content').innerHTML = `
+    <div class="welcome-state">
+      <div class="big-icon">📖</div>
+      <h2>স্বাগতম!</h2>
+      <p>উপরের ☰ মেনু থেকে একটি বই নির্বাচন করুন<br>অথবা নতুন বই যোগ করুন।</p>
+    </div>`;
+  document.getElementById('current-book-name').textContent = '';
 }
 
 async function createNewBook() {
@@ -861,12 +733,7 @@ async function confirmDeleteBook(bookId) {
     showToast('বই মুছে গেছে', 'success');
     selectedBookId = null;
     await loadBooks();
-    document.getElementById('main-content').innerHTML = `
-      <div class="welcome-state">
-        <div class="big-icon">📖</div>
-        <h2>স্বাগতম!</h2>
-        <p>একটি বই নির্বাচন করুন।</p>
-      </div>`;
+    showWelcome();
   } catch { showToast('মুছতে সমস্যা হয়েছে', 'error'); }
 }
 
@@ -877,8 +744,9 @@ async function confirmDeleteChapter(chapterId) {
     showToast('অধ্যায় মুছে গেছে', 'success');
     if (editingChapterId === chapterId) editingChapterId = null;
     chapters = await apiFetch(`/api/admin/books/${selectedBookId}/chapters`);
-    document.getElementById('chapter-list').innerHTML = renderChapterList();
-    document.getElementById('chapter-editor-container').innerHTML = '';
+    await loadBooks();
+    const book = books.find(b => b.id === selectedBookId);
+    if (book) renderBookEditor(book);
   } catch { showToast('মুছতে সমস্যা', 'error'); }
 }
 
@@ -905,12 +773,8 @@ function escAttr(str) {
   return String(str || '').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
 
-// Init
-if (token) {
-  showApp();
-} else {
-  document.getElementById('login-screen').style.display = 'flex';
-}
+if (token) { showApp(); }
+else { document.getElementById('login-screen').style.display = 'flex'; }
 </script>
 </body>
 </html>
