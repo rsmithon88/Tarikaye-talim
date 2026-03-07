@@ -158,17 +158,30 @@ export default function HomeScreen() {
                   এলেঙ্গা, টাঙ্গাইল
                 </Text>
               </View>
-              <Pressable
-                onPress={() => {
-                  if (Platform.OS !== "web") {
-                    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                  }
-                  router.push("/developer");
-                }}
-                style={[styles.headerIconWrap, { backgroundColor: isDark ? Colors.darkSurface : Colors.white }]}
-              >
-                <Ionicons name="information-circle-outline" size={22} color={Colors.navy} />
-              </Pressable>
+              <View style={{ flexDirection: "row", gap: 8 }}>
+                <Pressable
+                  onPress={() => {
+                    if (Platform.OS !== "web") {
+                      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                    }
+                    refetch();
+                  }}
+                  style={[styles.headerIconWrap, { backgroundColor: isDark ? Colors.darkSurface : Colors.white }]}
+                >
+                  <Ionicons name="refresh" size={20} color={Colors.navy} />
+                </Pressable>
+                <Pressable
+                  onPress={() => {
+                    if (Platform.OS !== "web") {
+                      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                    }
+                    router.push("/developer");
+                  }}
+                  style={[styles.headerIconWrap, { backgroundColor: isDark ? Colors.darkSurface : Colors.white }]}
+                >
+                  <Ionicons name="information-circle-outline" size={22} color={Colors.navy} />
+                </Pressable>
+              </View>
             </View>
 
           </View>
