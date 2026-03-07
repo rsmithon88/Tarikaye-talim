@@ -173,6 +173,9 @@ function configureExpoAndLanding(app: express.Application) {
 
   log("Serving static Expo files with dynamic manifest routing");
 
+  const webBuildDir = path.resolve(process.cwd(), "dist");
+  const hasWebBuild = fs.existsSync(webBuildDir) && fs.existsSync(path.join(webBuildDir, "index.html"));
+
   app.use((req: Request, res: Response, next: NextFunction) => {
     if (req.path.startsWith("/api") || req.path === "/admin") {
       return next();
@@ -187,6 +190,10 @@ function configureExpoAndLanding(app: express.Application) {
       return serveExpoManifest(platform, res);
     }
 
+    if (req.path === "/" && hasWebBuild) {
+      return res.sendFile(path.join(webBuildDir, "index.html"));
+    }
+
     if (req.path === "/") {
       return serveLandingPage({
         req,
@@ -199,8 +206,20 @@ function configureExpoAndLanding(app: express.Application) {
     next();
   });
 
+  if (hasWebBuild) {
+    app.use(express.static(webBuildDir));
+    log("Serving Expo web build from dist/");
+  }
+
   app.use("/assets", express.static(path.resolve(process.cwd(), "assets")));
   app.use(express.static(path.resolve(process.cwd(), "static-build")));
+
+  app.use((req: Request, res: Response, next: NextFunction) => {
+    if (!req.path.startsWith("/api") && req.path !== "/admin" && hasWebBuild) {
+      return res.sendFile(path.join(webBuildDir, "index.html"));
+    }
+    next();
+  });
 
   log("Expo routing: Checking expo-platform header on / and /manifest");
 }
