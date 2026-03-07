@@ -3,17 +3,19 @@ import {
   View,
   Text,
   StyleSheet,
-  ScrollView,
+  FlatList,
   Pressable,
   ActivityIndicator,
   Platform,
   useColorScheme,
+  RefreshControl,
 } from "react-native";
 import { useQuery } from "@tanstack/react-query";
 import { router, useLocalSearchParams } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import * as Haptics from "expo-haptics";
 import { Ionicons } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
 import Colors from "@/constants/colors";
 
 interface Book {
@@ -34,47 +36,57 @@ interface Chapter {
   content: string;
 }
 
-function BookHero({ book }: { book: Book }) {
-  const isDark = useColorScheme() === "dark";
-  const coverColor = book.cover_color || Colors.navy;
-  const accentColor = book.cover_accent || Colors.gold;
+const CHAPTER_GRADIENTS = [
+  ["#1B7A3D", "#2A9D55", "#38C76E"],
+  ["#1A6B35", "#28A54C", "#36BF63"],
+  ["#0F7B4F", "#1D9B6C", "#2BB585"],
+  ["#1E8B50", "#2CA868", "#3AC580"],
+  ["#148040", "#22A05A", "#30C074"],
+  ["#1C7344", "#2A935C", "#38B374"],
+  ["#178B3E", "#25AB56", "#33CB6E"],
+  ["#1A6840", "#289858", "#36B870"],
+];
+
+function ChapterCard({
+  chapter,
+  index,
+  bookColor,
+  onPress,
+}: {
+  chapter: Chapter;
+  index: number;
+  bookColor: string;
+  onPress: () => void;
+}) {
+  const gradients = CHAPTER_GRADIENTS[index % CHAPTER_GRADIENTS.length];
 
   return (
-    <View style={[styles.hero, { backgroundColor: coverColor }]}>
-      <View style={[styles.heroSpine, { backgroundColor: accentColor, opacity: 0.5 }]} />
-
-      <View style={styles.heroCoverWrap}>
-        <View style={[styles.heroCover, { backgroundColor: coverColor }]}>
-          <View style={[styles.heroCoverSpine, { backgroundColor: accentColor }]} />
-          <View style={[styles.heroCoverLine1, { backgroundColor: accentColor }]} />
-          <View style={[styles.heroCoverLine2, { backgroundColor: accentColor }]} />
-          <View style={styles.heroCoverTextWrap}>
-            <Text style={styles.heroCoverTitle} numberOfLines={4}>
-              {book.title}
-            </Text>
-            {book.author ? (
-              <Text style={styles.heroCoverAuthor} numberOfLines={1}>
-                {book.author}
-              </Text>
-            ) : null}
+    <Pressable
+      onPress={onPress}
+      style={({ pressed }) => [
+        styles.chapterCard,
+        pressed && styles.chapterCardPressed,
+      ]}
+    >
+      <LinearGradient
+        colors={gradients as [string, string, string]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 0.5 }}
+        style={styles.chapterGradient}
+      >
+        <View style={styles.chapterDecoCircle} />
+        <View style={styles.chapterDecoCircle2} />
+        <View style={styles.chapterContent}>
+          <View style={styles.chapterNumBadge}>
+            <Text style={styles.chapterNumText}>{index + 1}</Text>
           </View>
-          <View style={[styles.heroCoverBottom, { backgroundColor: accentColor }]} />
+          <Text style={styles.chapterTitle} numberOfLines={2}>
+            {chapter.title}
+          </Text>
+          <Ionicons name="chevron-forward" size={18} color="rgba(255,255,255,0.7)" />
         </View>
-      </View>
-
-      <View style={styles.heroMeta}>
-        <Text style={styles.heroTitle}>{book.title}</Text>
-        {book.author ? (
-          <Text style={styles.heroAuthor}>{book.author}</Text>
-        ) : null}
-        <View style={styles.heroStats}>
-          <View style={[styles.heroBadge, { backgroundColor: "rgba(255,255,255,0.2)" }]}>
-            <Ionicons name="list" size={13} color="white" />
-            <Text style={styles.heroBadgeText}>{book.chapter_count} অধ্যায়</Text>
-          </View>
-        </View>
-      </View>
-    </View>
+      </LinearGradient>
+    </Pressable>
   );
 }
 
@@ -88,28 +100,25 @@ export default function BookDetailScreen() {
     queryKey: ["/api/books", id],
   });
 
-  const { data: chapters, isLoading: chaptersLoading } = useQuery<Chapter[]>({
+  const {
+    data: chapters,
+    isLoading: chaptersLoading,
+    refetch,
+    isFetching,
+  } = useQuery<Chapter[]>({
     queryKey: ["/api/books", id, "chapters"],
   });
 
-  const handleChapterPress = useCallback(
-    (chapterId: number) => {
-      if (Platform.OS !== "web") {
-        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-      }
-      router.push({ pathname: "/chapter/[id]", params: { id: chapterId } });
-    },
-    []
-  );
+  const handleChapterPress = useCallback((chapterId: number) => {
+    if (Platform.OS !== "web") {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    }
+    router.push({ pathname: "/chapter/[id]", params: { id: chapterId } });
+  }, []);
 
   if (bookLoading) {
     return (
-      <View
-        style={[
-          styles.center,
-          { backgroundColor: isDark ? Colors.darkBg : Colors.cream },
-        ]}
-      >
+      <View style={[styles.center, { backgroundColor: isDark ? Colors.darkBg : Colors.cream }]}>
         <ActivityIndicator size="large" color={Colors.navy} />
       </View>
     );
@@ -117,12 +126,7 @@ export default function BookDetailScreen() {
 
   if (!book) {
     return (
-      <View
-        style={[
-          styles.center,
-          { backgroundColor: isDark ? Colors.darkBg : Colors.cream },
-        ]}
-      >
+      <View style={[styles.center, { backgroundColor: isDark ? Colors.darkBg : Colors.cream }]}>
         <Ionicons name="alert-circle-outline" size={48} color={Colors.textLight} />
         <Text style={[styles.errorText, { color: isDark ? Colors.darkText : Colors.textDark }]}>
           বই খুঁজে পাওয়া যায়নি
@@ -131,102 +135,131 @@ export default function BookDetailScreen() {
     );
   }
 
-  const bottomPad = Platform.OS === "web" ? 34 : insets.bottom + 16;
+  const bottomPad = Platform.OS === "web" ? 34 : insets.bottom + 20;
+  const coverColor = book.cover_color || Colors.navy;
+
+  const renderHeader = () => (
+    <View>
+      <LinearGradient
+        colors={[coverColor, shiftColor(coverColor, 30)]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={styles.heroBanner}
+      >
+        <View style={styles.heroDecoCircle1} />
+        <View style={styles.heroDecoCircle2} />
+        <View style={styles.heroContent}>
+          <View style={styles.heroBookIcon}>
+            <Ionicons name="book" size={28} color="rgba(255,255,255,0.95)" />
+          </View>
+          <View style={styles.heroTextWrap}>
+            <Text style={styles.heroTitle} numberOfLines={3}>
+              {book.title}
+            </Text>
+            {book.author ? (
+              <Text style={styles.heroAuthor} numberOfLines={1}>
+                {book.author}
+              </Text>
+            ) : null}
+            <View style={styles.heroStatRow}>
+              <View style={styles.heroStat}>
+                <Ionicons name="layers" size={13} color="rgba(255,255,255,0.85)" />
+                <Text style={styles.heroStatText}>{book.chapter_count} অধ্যায়</Text>
+              </View>
+            </View>
+          </View>
+        </View>
+      </LinearGradient>
+
+      {book.description ? (
+        <View
+          style={[
+            styles.descCard,
+            { backgroundColor: isDark ? Colors.darkSurface : Colors.white },
+          ]}
+        >
+          <Ionicons name="information-circle" size={18} color={coverColor} />
+          <Text style={[styles.descText, { color: isDark ? Colors.darkText : Colors.textDark }]}>
+            {book.description}
+          </Text>
+        </View>
+      ) : null}
+
+      <View style={styles.sectionHeader}>
+        <Text style={[styles.sectionTitle, { color: isDark ? Colors.darkText : Colors.textDark }]}>
+          অধ্যায়সমূহ
+        </Text>
+        <Text style={[styles.sectionCount, { color: isDark ? Colors.darkTextMid : Colors.textLight }]}>
+          {chapters?.length || 0}টি
+        </Text>
+      </View>
+    </View>
+  );
 
   return (
     <View style={[styles.container, { backgroundColor: isDark ? Colors.darkBg : Colors.cream }]}>
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: bottomPad }}
-      >
-        <BookHero book={book} />
-
-        <View style={styles.body}>
-          {book.description ? (
-            <View style={[styles.descCard, { backgroundColor: isDark ? Colors.darkSurface : Colors.white }]}>
-              <Text style={[styles.descTitle, { color: isDark ? Colors.darkTextMid : Colors.textLight }]}>
-                বইয়ের পরিচয়
-              </Text>
-              <Text style={[styles.descText, { color: isDark ? Colors.darkText : Colors.textDark }]}>
-                {book.description}
-              </Text>
-            </View>
-          ) : null}
-
-          <Text style={[styles.chaptersHeading, { color: isDark ? Colors.darkText : Colors.textDark }]}>
-            অধ্যায়সমূহ
-          </Text>
-
-          {chaptersLoading ? (
-            <ActivityIndicator size="small" color={Colors.navy} style={{ marginTop: 20 }} />
-          ) : !chapters || chapters.length === 0 ? (
+      {chaptersLoading ? (
+        <View style={styles.center}>
+          {renderHeader()}
+          <ActivityIndicator size="small" color={Colors.navy} style={{ marginTop: 20 }} />
+        </View>
+      ) : (
+        <FlatList
+          data={chapters || []}
+          keyExtractor={(item) => item.id.toString()}
+          contentContainerStyle={[styles.listContent, { paddingBottom: bottomPad }]}
+          ListHeaderComponent={renderHeader}
+          refreshControl={
+            <RefreshControl
+              refreshing={isFetching && !chaptersLoading}
+              onRefresh={refetch}
+              tintColor={coverColor}
+            />
+          }
+          ListEmptyComponent={
             <View style={styles.emptyChapters}>
-              <Ionicons
-                name="document-outline"
-                size={40}
-                color={isDark ? Colors.darkBorder : Colors.border}
-              />
+              <View
+                style={[
+                  styles.emptyIconWrap,
+                  { backgroundColor: isDark ? Colors.darkSurface : Colors.white },
+                ]}
+              >
+                <Ionicons
+                  name="document-outline"
+                  size={32}
+                  color={isDark ? Colors.darkBorder : Colors.border}
+                />
+              </View>
               <Text style={[styles.emptyText, { color: isDark ? Colors.darkTextMid : Colors.textMid }]}>
                 এখনো কোনো অধ্যায় নেই
               </Text>
             </View>
-          ) : (
-            <View style={styles.chapterList}>
-              {chapters.map((chapter, index) => (
-                <Pressable
-                  key={chapter.id}
-                  onPress={() => handleChapterPress(chapter.id)}
-                  style={({ pressed }) => [
-                    styles.chapterItem,
-                    {
-                      backgroundColor: isDark ? Colors.darkSurface : Colors.white,
-                    },
-                    pressed && styles.chapterItemPressed,
-                  ]}
-                >
-                  <View
-                    style={[
-                      styles.chapterNum,
-                      { backgroundColor: book.cover_color || Colors.navy },
-                    ]}
-                  >
-                    <Text style={styles.chapterNumText}>{index + 1}</Text>
-                  </View>
-                  <View style={styles.chapterInfo}>
-                    <Text
-                      style={[
-                        styles.chapterTitle,
-                        { color: isDark ? Colors.darkText : Colors.textDark },
-                      ]}
-                      numberOfLines={2}
-                    >
-                      {chapter.title}
-                    </Text>
-                    {chapter.content ? (
-                      <Text
-                        style={[
-                          styles.chapterPreview,
-                          { color: isDark ? Colors.darkTextMid : Colors.textLight },
-                        ]}
-                        numberOfLines={1}
-                      >
-                        {chapter.content.slice(0, 60)}…
-                      </Text>
-                    ) : null}
-                  </View>
-                  <Ionicons
-                    name="chevron-forward"
-                    size={18}
-                    color={isDark ? Colors.darkTextMid : Colors.textLight}
-                  />
-                </Pressable>
-              ))}
-            </View>
+          }
+          renderItem={({ item, index }) => (
+            <ChapterCard
+              chapter={item}
+              index={index}
+              bookColor={coverColor}
+              onPress={() => handleChapterPress(item.id)}
+            />
           )}
-        </View>
-      </ScrollView>
+          scrollEnabled={!!(chapters && chapters.length > 0)}
+          showsVerticalScrollIndicator={false}
+        />
+      )}
     </View>
   );
+}
+
+function shiftColor(hex: string, amount: number): string {
+  try {
+    const r = Math.min(255, parseInt(hex.slice(1, 3), 16) + amount);
+    const g = Math.min(255, parseInt(hex.slice(3, 5), 16) + amount);
+    const b = Math.min(255, parseInt(hex.slice(5, 7), 16) + amount);
+    return `#${r.toString(16).padStart(2, "0")}${g.toString(16).padStart(2, "0")}${b.toString(16).padStart(2, "0")}`;
+  } catch {
+    return hex;
+  }
 }
 
 const styles = StyleSheet.create({
@@ -241,90 +274,50 @@ const styles = StyleSheet.create({
     fontFamily: "Inter_600SemiBold",
     fontSize: 16,
   },
-  hero: {
-    paddingVertical: 40,
-    paddingHorizontal: 24,
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 24,
-    overflow: "hidden",
+  listContent: {
+    paddingHorizontal: 16,
   },
-  heroSpine: {
-    position: "absolute",
-    left: 0,
-    top: 0,
-    bottom: 0,
-    width: 4,
-  },
-  heroCoverWrap: {
-    shadowColor: "#000",
-    shadowOffset: { width: 4, height: 8 },
-    shadowOpacity: 0.4,
-    shadowRadius: 12,
-    elevation: 10,
-  },
-  heroCover: {
-    width: 100,
-    height: 140,
-    borderRadius: 6,
+  heroBanner: {
+    borderRadius: 18,
+    paddingHorizontal: 20,
+    paddingVertical: 24,
+    marginBottom: 16,
     overflow: "hidden",
     position: "relative",
   },
-  heroCoverSpine: {
+  heroDecoCircle1: {
     position: "absolute",
-    left: 0,
-    top: 0,
-    bottom: 0,
-    width: 10,
-    opacity: 0.7,
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    backgroundColor: "rgba(255,255,255,0.07)",
+    top: -30,
+    right: -20,
   },
-  heroCoverLine1: {
+  heroDecoCircle2: {
     position: "absolute",
-    left: 16,
-    top: 16,
-    right: 10,
-    height: 2,
-    borderRadius: 1,
-    opacity: 0.6,
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: "rgba(255,255,255,0.05)",
+    bottom: -10,
+    left: 20,
   },
-  heroCoverLine2: {
-    position: "absolute",
-    left: 16,
-    top: 22,
-    right: 22,
-    height: 1,
-    borderRadius: 1,
-    opacity: 0.3,
+  heroContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 16,
+    zIndex: 2,
   },
-  heroCoverTextWrap: {
-    position: "absolute",
-    left: 16,
-    right: 10,
-    top: 32,
-    bottom: 16,
+  heroBookIcon: {
+    width: 56,
+    height: 56,
+    borderRadius: 16,
+    backgroundColor: "rgba(255,255,255,0.18)",
+    alignItems: "center",
     justifyContent: "center",
   },
-  heroCoverTitle: {
-    color: "white",
-    fontFamily: "Inter_700Bold",
-    fontSize: 10,
-    lineHeight: 14,
-    marginBottom: 6,
-  },
-  heroCoverAuthor: {
-    color: "rgba(255,255,255,0.65)",
-    fontFamily: "Inter_400Regular",
-    fontSize: 8,
-  },
-  heroCoverBottom: {
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: 8,
-    opacity: 0.5,
-  },
-  heroMeta: {
+  heroTextWrap: {
     flex: 1,
   },
   heroTitle: {
@@ -332,85 +325,116 @@ const styles = StyleSheet.create({
     fontFamily: "Inter_700Bold",
     fontSize: 20,
     lineHeight: 28,
-    marginBottom: 6,
+    marginBottom: 4,
   },
   heroAuthor: {
     color: "rgba(255,255,255,0.75)",
     fontFamily: "Inter_500Medium",
-    fontSize: 14,
-    marginBottom: 12,
+    fontSize: 13,
+    marginBottom: 10,
   },
-  heroStats: {
+  heroStatRow: {
     flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 8,
+    gap: 10,
   },
-  heroBadge: {
+  heroStat: {
     flexDirection: "row",
     alignItems: "center",
     gap: 5,
+    backgroundColor: "rgba(0,0,0,0.15)",
     paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: 20,
+    paddingVertical: 4,
+    borderRadius: 12,
   },
-  heroBadgeText: {
-    color: "white",
+  heroStatText: {
+    color: "rgba(255,255,255,0.9)",
     fontFamily: "Inter_500Medium",
     fontSize: 12,
   },
-  body: {
-    padding: 20,
-  },
   descCard: {
     borderRadius: 14,
-    padding: 18,
-    marginBottom: 24,
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    marginBottom: 20,
+    flexDirection: "row",
+    alignItems: "flex-start",
+    gap: 10,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.05,
     shadowRadius: 4,
     elevation: 1,
-  },
-  descTitle: {
-    fontFamily: "Inter_600SemiBold",
-    fontSize: 11,
-    textTransform: "uppercase",
-    letterSpacing: 1,
-    marginBottom: 8,
   },
   descText: {
     fontFamily: "Inter_400Regular",
-    fontSize: 15,
-    lineHeight: 24,
+    fontSize: 14,
+    lineHeight: 22,
+    flex: 1,
   },
-  chaptersHeading: {
-    fontFamily: "Inter_700Bold",
-    fontSize: 20,
-    marginBottom: 14,
-  },
-  chapterList: {
-    gap: 10,
-  },
-  chapterItem: {
-    borderRadius: 14,
-    padding: 16,
+  sectionHeader: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 14,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-    elevation: 1,
+    justifyContent: "space-between",
+    marginBottom: 14,
   },
-  chapterItemPressed: {
-    opacity: 0.8,
+  sectionTitle: {
+    fontFamily: "Inter_700Bold",
+    fontSize: 19,
+  },
+  sectionCount: {
+    fontFamily: "Inter_500Medium",
+    fontSize: 14,
+  },
+  chapterCard: {
+    marginBottom: 10,
+    borderRadius: 14,
+    overflow: "hidden",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.12,
+    shadowRadius: 6,
+    elevation: 3,
+  },
+  chapterCardPressed: {
+    opacity: 0.88,
     transform: [{ scale: 0.98 }],
   },
-  chapterNum: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+  chapterGradient: {
+    borderRadius: 14,
+    paddingHorizontal: 16,
+    paddingVertical: 18,
+    overflow: "hidden",
+    position: "relative",
+  },
+  chapterDecoCircle: {
+    position: "absolute",
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: "rgba(255,255,255,0.06)",
+    top: -15,
+    right: 20,
+  },
+  chapterDecoCircle2: {
+    position: "absolute",
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: "rgba(255,255,255,0.04)",
+    bottom: -10,
+    left: 30,
+  },
+  chapterContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    zIndex: 2,
+  },
+  chapterNumBadge: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: "rgba(255,255,255,0.2)",
     alignItems: "center",
     justifyContent: "center",
     flexShrink: 0,
@@ -418,25 +442,27 @@ const styles = StyleSheet.create({
   chapterNumText: {
     color: "white",
     fontFamily: "Inter_700Bold",
-    fontSize: 14,
-  },
-  chapterInfo: {
-    flex: 1,
+    fontSize: 13,
   },
   chapterTitle: {
+    color: "white",
     fontFamily: "Inter_600SemiBold",
     fontSize: 15,
-    lineHeight: 21,
-  },
-  chapterPreview: {
-    fontFamily: "Inter_400Regular",
-    fontSize: 12,
-    marginTop: 3,
+    lineHeight: 22,
+    flex: 1,
   },
   emptyChapters: {
     alignItems: "center",
     paddingTop: 40,
-    gap: 12,
+    gap: 14,
+  },
+  emptyIconWrap: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 4,
   },
   emptyText: {
     fontFamily: "Inter_400Regular",
