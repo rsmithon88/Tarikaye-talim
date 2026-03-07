@@ -1,4 +1,3 @@
-// template
 import {
   Inter_400Regular,
   Inter_500Medium,
@@ -14,14 +13,41 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardProvider } from "react-native-keyboard-controller";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { queryClient } from "@/lib/query-client";
+import { useColorScheme } from "react-native";
+import Colors from "@/constants/colors";
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 function RootLayoutNav() {
+  const colorScheme = useColorScheme();
+  const isDark = colorScheme === "dark";
+
   return (
-    <Stack screenOptions={{ headerBackTitle: "Back" }}>
+    <Stack
+      screenOptions={{
+        headerBackTitle: "ফিরুন",
+        headerStyle: {
+          backgroundColor: isDark ? Colors.darkBg : Colors.cream,
+        },
+        headerTintColor: isDark ? Colors.darkText : Colors.navy,
+        headerTitleStyle: {
+          fontFamily: "Inter_700Bold",
+          fontSize: 17,
+        },
+        contentStyle: {
+          backgroundColor: isDark ? Colors.darkBg : Colors.cream,
+        },
+      }}
+    >
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      <Stack.Screen
+        name="book/[id]"
+        options={{ headerShown: true, title: "" }}
+      />
+      <Stack.Screen
+        name="chapter/[id]"
+        options={{ headerShown: true, title: "" }}
+      />
     </Stack>
   );
 }

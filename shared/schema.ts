@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { pgTable, text, varchar } from "drizzle-orm/pg-core";
+import { pgTable, text, varchar, serial, boolean, integer, timestamp } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -11,10 +11,35 @@ export const users = pgTable("users", {
   password: text("password").notNull(),
 });
 
-export const insertUserSchema = createInsertSchema(users).pick({
-  username: true,
-  password: true,
+export const books = pgTable("books", {
+  id: serial("id").primaryKey(),
+  title: varchar("title", { length: 255 }).notNull(),
+  description: text("description").default(""),
+  author: varchar("author", { length: 255 }).default(""),
+  coverColor: varchar("cover_color", { length: 20 }).default("#1E3A5F"),
+  coverAccent: varchar("cover_accent", { length: 20 }).default("#C9A84C"),
+  published: boolean("published").default(true),
+  sortOrder: integer("sort_order").default(0),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
 });
 
-export type InsertUser = z.infer<typeof insertUserSchema>;
+export const chapters = pgTable("chapters", {
+  id: serial("id").primaryKey(),
+  bookId: integer("book_id").notNull().references(() => books.id, { onDelete: "cascade" }),
+  title: varchar("title", { length: 255 }).notNull(),
+  content: text("content").default(""),
+  sortOrder: integer("sort_order").default(0),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const insertBookSchema = createInsertSchema(books).omit({ id: true, createdAt: true, updatedAt: true });
+export const insertChapterSchema = createInsertSchema(chapters).omit({ id: true, createdAt: true, updatedAt: true });
+
+export type InsertUser = z.infer<typeof createInsertSchema<typeof users>>;
 export type User = typeof users.$inferSelect;
+export type Book = typeof books.$inferSelect;
+export type Chapter = typeof chapters.$inferSelect;
+export type InsertBook = z.infer<typeof insertBookSchema>;
+export type InsertChapter = z.infer<typeof insertChapterSchema>;
