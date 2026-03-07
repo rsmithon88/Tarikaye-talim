@@ -11,7 +11,7 @@ function NativeTabLayout() {
     <NativeTabs>
       <NativeTabs.Trigger name="index">
         <Icon sf={{ default: "books.vertical", selected: "books.vertical.fill" }} />
-        <Label>পাঠশালা</Label>
+        <Label>তালিম</Label>
       </NativeTabs.Trigger>
     </NativeTabs>
   );
@@ -61,7 +61,7 @@ function ClassicTabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: "পাঠশালা",
+          title: "তালিম",
           tabBarIcon: ({ color, size }) => {
             const { Ionicons } = require("@expo/vector-icons");
             return <Ionicons name="library" size={size} color={color} />;
