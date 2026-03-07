@@ -9,6 +9,7 @@ import {
   Linking,
   Platform,
   useColorScheme,
+  Image,
 } from "react-native";
 import { useQuery } from "@tanstack/react-query";
 import { router } from "expo-router";
@@ -24,6 +25,7 @@ interface DevSettings {
   dev_mobile: string;
   dev_whatsapp: string;
   dev_email: string;
+  dev_photo: string;
 }
 
 function InfoRow({
@@ -109,9 +111,13 @@ export default function DeveloperScreen() {
       ) : (
         <ScrollView contentContainerStyle={s.scrollContent} showsVerticalScrollIndicator={false}>
           <View style={[s.profileCard, { backgroundColor: isDark ? Colors.darkSurface : Colors.white }]}>
-            <View style={s.profileIconWrap}>
-              <Ionicons name="code-slash" size={32} color="#fff" />
-            </View>
+            {settings?.dev_photo ? (
+              <Image source={{ uri: settings.dev_photo }} style={s.profilePhoto} />
+            ) : (
+              <View style={s.profileIconWrap}>
+                <Ionicons name="person" size={32} color="#fff" />
+              </View>
+            )}
             {settings?.dev_name ? (
               <Text style={[s.profileName, { color: isDark ? Colors.darkText : Colors.textDark }]}>
                 {settings.dev_name}
@@ -201,10 +207,18 @@ const s = StyleSheet.create({
     shadowRadius: 8,
     elevation: 2,
   },
+  profilePhoto: {
+    width: 90,
+    height: 90,
+    borderRadius: 45,
+    marginBottom: 12,
+    borderWidth: 3,
+    borderColor: Colors.navy,
+  },
   profileIconWrap: {
-    width: 64,
-    height: 64,
-    borderRadius: 32,
+    width: 90,
+    height: 90,
+    borderRadius: 45,
     backgroundColor: Colors.navy,
     alignItems: "center",
     justifyContent: "center",
