@@ -42,6 +42,14 @@ function BookCard({ book, index }: { book: Book; index: number }) {
     ["#145A32", "#27AE60", "#2ECC71"],
     ["#7B241C", "#C0392B", "#E74C3C"],
     ["#6C3483", "#8E44AD", "#AF7AC5"],
+    ["#0E4D44", "#16A085", "#1ABC9C"],
+    ["#4A235A", "#6C3483", "#A569BD"],
+    ["#1B4F72", "#21618C", "#2E86C1"],
+    ["#784212", "#B9770E", "#D4AC0D"],
+    ["#1A237E", "#283593", "#3949AB"],
+    ["#004D40", "#00695C", "#00897B"],
+    ["#880E4F", "#AD1457", "#C2185B"],
+    ["#33691E", "#558B2F", "#689F38"],
   ];
 
   const gradientColors = gradientSets[index % gradientSets.length];
@@ -165,30 +173,7 @@ export default function HomeScreen() {
                   {orgSubtitle}
                 </Text>
               </View>
-              <Pressable
-                onPress={() => {
-                  if (Platform.OS !== "web") {
-                    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                  }
-                  router.push("/developer");
-                }}
-                style={[styles.headerIconWrap, { backgroundColor: isDark ? Colors.darkSurface : Colors.white }]}
-              >
-                <Ionicons name="information-circle-outline" size={22} color={Colors.navy} />
-              </Pressable>
             </View>
-            <Pressable
-              onPress={() => {
-                if (Platform.OS !== "web") {
-                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                }
-                refetch();
-              }}
-              style={[styles.refreshBtn, { backgroundColor: isDark ? Colors.darkSurface : Colors.white }]}
-            >
-              <Ionicons name="refresh" size={18} color={Colors.navy} />
-              <Text style={[styles.refreshBtnText, { color: isDark ? Colors.darkText : Colors.textDark }]}>রিফ্রেশ</Text>
-            </Pressable>
           </View>
         }
         ListEmptyComponent={

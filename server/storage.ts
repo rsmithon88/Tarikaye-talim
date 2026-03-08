@@ -125,6 +125,115 @@ export async function deleteChapter(id: number): Promise<boolean> {
   return (rowCount || 0) > 0;
 }
 
+export interface LibraryBook {
+  id: number;
+  title: string;
+  description: string;
+  status: string;
+  sort_order: number;
+  created_at: Date;
+}
+
+export interface Bookmark {
+  id: number;
+  device_id: string;
+  book_id: number;
+  chapter_id: number;
+  book_title: string;
+  chapter_title: string;
+  scroll_position: number;
+  created_at: Date;
+}
+
+export interface SupportMessage {
+  id: number;
+  name: string;
+  address: string;
+  mobile: string;
+  details: string;
+  is_read: boolean;
+  created_at: Date;
+}
+
+export async function getAllLibraryBooks(): Promise<LibraryBook[]> {
+  const { rows } = await pool.query("SELECT * FROM library_books ORDER BY sort_order, created_at DESC");
+  return rows;
+}
+
+export async function createLibraryBook(data: Partial<LibraryBook>): Promise<LibraryBook> {
+  const { rows } = await pool.query(
+    "INSERT INTO library_books (title, description, status, sort_order) VALUES ($1, $2, $3, $4) RETURNING *",
+    [data.title, data.description || "", data.status || "upcoming", data.sort_order || 0]
+  );
+  return rows[0];
+}
+
+export async function updateLibraryBook(id: number, data: Partial<LibraryBook>): Promise<LibraryBook | null> {
+  const { rows } = await pool.query(
+    "UPDATE library_books SET title=$1, description=$2, status=$3, sort_order=$4 WHERE id=$5 RETURNING *",
+    [data.title, data.description, data.status, data.sort_order, id]
+  );
+  return rows[0] || null;
+}
+
+export async function deleteLibraryBook(id: number): Promise<boolean> {
+  const { rowCount } = await pool.query("DELETE FROM library_books WHERE id=$1", [id]);
+  return (rowCount || 0) > 0;
+}
+
+export async function getBookmarksByDeviceId(deviceId: string): Promise<Bookmark[]> {
+  const { rows } = await pool.query(
+    "SELECT * FROM bookmarks WHERE device_id=$1 ORDER BY created_at DESC",
+    [deviceId]
+  );
+  return rows;
+}
+
+export async function createBookmark(data: Partial<Bookmark>): Promise<Bookmark> {
+  await pool.query(
+    "DELETE FROM bookmarks WHERE device_id=$1 AND chapter_id=$2",
+    [data.device_id, data.chapter_id]
+  );
+  const { rows } = await pool.query(
+    "INSERT INTO bookmarks (device_id, book_id, chapter_id, book_title, chapter_title, scroll_position) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
+    [data.device_id, data.book_id, data.chapter_id, data.book_title || "", data.chapter_title || "", data.scroll_position || 0]
+  );
+  return rows[0];
+}
+
+export async function deleteBookmark(id: number, deviceId: string): Promise<boolean> {
+  const { rowCount } = await pool.query("DELETE FROM bookmarks WHERE id=$1 AND device_id=$2", [id, deviceId]);
+  return (rowCount || 0) > 0;
+}
+
+export async function getAllSupportMessages(): Promise<SupportMessage[]> {
+  const { rows } = await pool.query("SELECT * FROM support_messages ORDER BY created_at DESC");
+  return rows;
+}
+
+export async function createSupportMessage(data: Partial<SupportMessage>): Promise<SupportMessage> {
+  const { rows } = await pool.query(
+    "INSERT INTO support_messages (name, address, mobile, details) VALUES ($1, $2, $3, $4) RETURNING *",
+    [data.name, data.address || "", data.mobile || "", data.details]
+  );
+  return rows[0];
+}
+
+export async function markSupportMessageRead(id: number): Promise<boolean> {
+  const { rowCount } = await pool.query("UPDATE support_messages SET is_read=true WHERE id=$1", [id]);
+  return (rowCount || 0) > 0;
+}
+
+export async function deleteSupportMessage(id: number): Promise<boolean> {
+  const { rowCount } = await pool.query("DELETE FROM support_messages WHERE id=$1", [id]);
+  return (rowCount || 0) > 0;
+}
+
+export async function getUnreadSupportCount(): Promise<number> {
+  const { rows } = await pool.query("SELECT COUNT(*)::int as count FROM support_messages WHERE is_read=false");
+  return rows[0]?.count || 0;
+}
+
 export async function getAllSettings(): Promise<Record<string, string>> {
   const { rows } = await pool.query("SELECT key, value FROM settings");
   const result: Record<string, string> = {};

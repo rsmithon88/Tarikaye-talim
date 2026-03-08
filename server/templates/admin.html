@@ -326,6 +326,20 @@
           <div class="book-item-meta">প্রতিষ্ঠানের নাম, সাবটাইটেল</div>
         </div>
       </div>
+      <div class="book-item" onclick="closeSidebar(); showLibraryManager();" style="border-radius:8px;">
+        <div style="width:26px;height:34px;background:#27AE60;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:16px;color:#fff;">&#128218;</div>
+        <div class="book-item-info">
+          <div class="book-item-title">লাইব্রেরি</div>
+          <div class="book-item-meta">আসন্ন বই ম্যানেজ করুন</div>
+        </div>
+      </div>
+      <div class="book-item" onclick="closeSidebar(); showSupportMailbox();" style="border-radius:8px;">
+        <div style="width:26px;height:34px;background:#E74C3C;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:16px;color:#fff;">&#9993;</div>
+        <div class="book-item-info">
+          <div class="book-item-title">মেইলবক্স <span id="unread-badge" style="display:none;background:#E74C3C;color:#fff;font-size:10px;padding:2px 6px;border-radius:10px;margin-left:6px;"></span></div>
+          <div class="book-item-meta">সদস্যদের বার্তা</div>
+        </div>
+      </div>
       <div class="book-item" onclick="closeSidebar(); showDevSettings();" style="border-radius:8px;">
         <div style="width:26px;height:34px;background:var(--gold);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:16px;">&#128100;</div>
         <div class="book-item-info">
@@ -478,6 +492,7 @@ function renderBookEditor(book) {
             <div class="color-preview" id="color-preview-bg" style="background:${book.cover_color||'#1E3A5F'}"></div>
             <span style="font-size:13px;color:var(--text2)">পটভূমির রং</span>
           </div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;" class="color-presets" data-target="b-color"></div>
         </div>
         <div class="form-row">
           <label>অ্যাকসেন্ট রং</label>
@@ -516,6 +531,7 @@ function renderBookEditor(book) {
 
     <div id="chapter-editor-container"></div>
   `;
+  setTimeout(initColorPresets, 0);
 }
 
 function renderChapterList() {
@@ -767,6 +783,16 @@ async function confirmDeleteChapter(chapterId) {
   } catch { showToast('মুছতে সমস্যা', 'error'); }
 }
 
+function initColorPresets() {
+  const presetColors = ['#1E3A5F','#1E6B3A','#5B2C6F','#B7410E','#1A5276','#145A32','#7B241C','#6C3483','#0E4D44','#4A235A','#1B4F72','#784212','#1A237E','#004D40','#880E4F','#33691E'];
+  document.querySelectorAll('.color-presets').forEach(el => {
+    const targetId = el.dataset.target;
+    el.innerHTML = presetColors.map(c =>
+      `<div onclick="document.getElementById('${targetId}').value='${c}';updateCoverPreview()" style="width:24px;height:24px;border-radius:6px;background:${c};cursor:pointer;border:2px solid transparent;"></div>`
+    ).join('');
+  });
+}
+
 function updateCoverPreview() {
   const color = document.getElementById('b-color').value;
   const accent = document.getElementById('b-accent').value;
@@ -938,7 +964,130 @@ async function saveDevSettings() {
   } catch { showToast('সেভ করতে সমস্যা', 'error'); }
 }
 
-if (token) { showApp(); }
+async function showLibraryManager() {
+  selectedBookId = null;
+  editingChapterId = null;
+  renderBookList();
+  document.getElementById('current-book-name').textContent = 'লাইব্রেরি';
+  try {
+    const items = await apiFetch('/api/admin/library');
+    const content = document.getElementById('main-content');
+    let html = `<div style="max-width:700px;margin:0 auto;padding:32px 20px;">
+      <h2 style="margin-bottom:8px;font-size:22px;">লাইব্রেরি ম্যানেজমেন্ট</h2>
+      <p style="color:#aaa;margin-bottom:24px;font-size:14px;">আসন্ন ও প্রকাশিত বইয়ের তালিকা। পাবলিক অ্যাপের "লাইব্রেরি" ট্যাবে দেখাবে।</p>
+      <div style="display:flex;gap:8px;margin-bottom:24px;">
+        <input id="lib-title" class="form-input" placeholder="বইয়ের নাম..." style="flex:1;">
+        <select id="lib-status" class="form-input" style="width:auto;">
+          <option value="upcoming">শীঘ্রই আসছে</option>
+          <option value="available">পড়ুন</option>
+        </select>
+        <button class="btn-save" onclick="addLibraryBook()" style="white-space:nowrap;">যোগ করুন</button>
+      </div>
+      <div id="lib-list">`;
+    if (items.length === 0) {
+      html += '<p style="text-align:center;color:#888;padding:32px;">কোনো লাইব্রেরি বই নেই</p>';
+    }
+    items.forEach(item => {
+      const statusLabel = item.status === 'available' ? 'পড়ুন' : 'শীঘ্রই আসছে';
+      const statusColor = item.status === 'available' ? '#27AE60' : '#F39C12';
+      html += `<div style="display:flex;align-items:center;gap:12px;padding:12px;border:1px solid var(--border);border-radius:10px;margin-bottom:8px;">
+        <div style="width:8px;height:8px;border-radius:50%;background:${statusColor};flex-shrink:0;"></div>
+        <div style="flex:1;font-size:15px;">${escHtml(item.title)}</div>
+        <span style="font-size:11px;color:${statusColor};padding:2px 8px;border-radius:8px;background:${statusColor}20;">${statusLabel}</span>
+        <button onclick="deleteLibraryBook(${item.id})" style="background:none;border:none;color:#E74C3C;cursor:pointer;font-size:16px;">&#10005;</button>
+      </div>`;
+    });
+    html += '</div></div>';
+    content.innerHTML = html;
+  } catch { showToast('লোড করতে সমস্যা', 'error'); }
+}
+
+async function addLibraryBook() {
+  const title = document.getElementById('lib-title').value.trim();
+  const status = document.getElementById('lib-status').value;
+  if (!title) { showToast('বইয়ের নাম দিন', 'error'); return; }
+  try {
+    await apiFetch('/api/admin/library', { method: 'POST', body: JSON.stringify({ title, status }) });
+    showToast('বই যোগ হয়েছে!');
+    showLibraryManager();
+  } catch { showToast('সমস্যা হয়েছে', 'error'); }
+}
+
+async function deleteLibraryBook(id) {
+  if (!confirm('এই বই মুছে ফেলবেন?')) return;
+  try {
+    await apiFetch('/api/admin/library/' + id, { method: 'DELETE' });
+    showToast('মুছে গেছে');
+    showLibraryManager();
+  } catch { showToast('সমস্যা', 'error'); }
+}
+
+async function showSupportMailbox() {
+  selectedBookId = null;
+  editingChapterId = null;
+  renderBookList();
+  document.getElementById('current-book-name').textContent = 'মেইলবক্স';
+  try {
+    const { messages, unreadCount } = await apiFetch('/api/admin/support');
+    const content = document.getElementById('main-content');
+    let html = `<div style="max-width:700px;margin:0 auto;padding:32px 20px;">
+      <h2 style="margin-bottom:8px;font-size:22px;">সদস্যদের বার্তা</h2>
+      <p style="color:#aaa;margin-bottom:24px;font-size:14px;">${unreadCount > 0 ? unreadCount + 'টি অপঠিত বার্তা' : 'সব বার্তা পড়া হয়েছে'}</p>`;
+    if (messages.length === 0) {
+      html += '<p style="text-align:center;color:#888;padding:32px;">কোনো বার্তা নেই</p>';
+    }
+    messages.forEach(msg => {
+      const date = new Date(msg.created_at).toLocaleDateString('bn-BD');
+      const unreadStyle = msg.is_read ? '' : 'border-left:3px solid #E74C3C;';
+      html += `<div style="padding:16px;border:1px solid var(--border);border-radius:10px;margin-bottom:12px;${unreadStyle}">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+          <strong style="font-size:16px;">${escHtml(msg.name)}</strong>
+          <span style="font-size:11px;color:#888;">${date}</span>
+        </div>
+        ${msg.mobile ? '<div style="font-size:13px;color:#888;margin-bottom:4px;">📱 ' + escHtml(msg.mobile) + '</div>' : ''}
+        ${msg.address ? '<div style="font-size:13px;color:#888;margin-bottom:8px;">📍 ' + escHtml(msg.address) + '</div>' : ''}
+        <div style="font-size:14px;line-height:1.6;white-space:pre-wrap;margin-bottom:12px;">${escHtml(msg.details)}</div>
+        <div style="display:flex;gap:8px;justify-content:flex-end;">
+          ${!msg.is_read ? '<button onclick="markSupportRead(' + msg.id + ')" style="padding:6px 12px;background:var(--navy);color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:12px;">পড়া হয়েছে</button>' : ''}
+          <button onclick="deleteSupportMsg(${msg.id})" style="padding:6px 12px;background:transparent;border:1px solid #E74C3C;color:#E74C3C;border-radius:6px;cursor:pointer;font-size:12px;">মুছুন</button>
+        </div>
+      </div>`;
+    });
+    html += '</div>';
+    content.innerHTML = html;
+  } catch { showToast('লোড করতে সমস্যা', 'error'); }
+}
+
+async function markSupportRead(id) {
+  try {
+    await apiFetch('/api/admin/support/' + id + '/read', { method: 'PUT' });
+    showSupportMailbox();
+  } catch { showToast('সমস্যা', 'error'); }
+}
+
+async function deleteSupportMsg(id) {
+  if (!confirm('এই বার্তা মুছে ফেলবেন?')) return;
+  try {
+    await apiFetch('/api/admin/support/' + id, { method: 'DELETE' });
+    showToast('মুছে গেছে');
+    showSupportMailbox();
+  } catch { showToast('সমস্যা', 'error'); }
+}
+
+async function loadUnreadCount() {
+  try {
+    const { unreadCount } = await apiFetch('/api/admin/support');
+    const badge = document.getElementById('unread-badge');
+    if (badge && unreadCount > 0) {
+      badge.textContent = unreadCount;
+      badge.style.display = 'inline';
+    } else if (badge) {
+      badge.style.display = 'none';
+    }
+  } catch {}
+}
+
+if (token) { showApp(); loadUnreadCount(); }
 else { document.getElementById('login-screen').style.display = 'flex'; }
 </script>
 </body>

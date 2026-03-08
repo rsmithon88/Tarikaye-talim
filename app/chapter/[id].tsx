@@ -8,8 +8,9 @@ import {
   ActivityIndicator,
   Platform,
   useColorScheme,
+  Alert,
 } from "react-native";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { router, useLocalSearchParams } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import * as Haptics from "expo-haptics";
@@ -18,6 +19,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect } from "react";
 import Colors from "@/constants/colors";
 import LoadingSpinner from "@/components/LoadingSpinner";
+import { getDeviceId } from "@/lib/device-id";
+import { apiRequest } from "@/lib/query-client";
 
 interface Chapter {
   id: number;
@@ -42,8 +45,10 @@ export default function ChapterReaderScreen() {
   const colorScheme = useColorScheme();
   const isDark = colorScheme === "dark";
   const insets = useSafeAreaInsets();
+  const queryClient = useQueryClient();
   const [fontSizeIdx, setFontSizeIdx] = useState(1);
   const [showSettings, setShowSettings] = useState(false);
+  const [bookmarked, setBookmarked] = useState(false);
 
   const { data: chapter, isLoading } = useQuery<Chapter>({
     queryKey: ["/api/chapters", id],
@@ -64,12 +69,31 @@ export default function ChapterReaderScreen() {
     }
   }, [chapter]);
 
-  // Load font size preference
   useEffect(() => {
     AsyncStorage.getItem("reader_font_size_idx").then((val) => {
       if (val !== null) setFontSizeIdx(Number(val));
     });
   }, []);
+
+  const handleBookmark = useCallback(async () => {
+    if (!chapter || !book) return;
+    if (Platform.OS !== "web") {
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    }
+    try {
+      const deviceId = await getDeviceId();
+      await apiRequest("POST", "/api/bookmarks", {
+        device_id: deviceId,
+        book_id: chapter.book_id,
+        chapter_id: chapter.id,
+        book_title: book.title,
+        chapter_title: chapter.title,
+      });
+      setBookmarked(true);
+      queryClient.invalidateQueries({ queryKey: ["/api/bookmarks"] });
+      setTimeout(() => setBookmarked(false), 2000);
+    } catch {}
+  }, [chapter, book, queryClient]);
 
   const changeFontSize = useCallback(
     (delta: number) => {
@@ -145,6 +169,13 @@ export default function ChapterReaderScreen() {
             style={[styles.fontBtn, { opacity: fontSizeIdx === FONT_SIZES.length - 1 ? 0.3 : 1 }]}
           >
             <Text style={[styles.fontBtnTextLg, { color: isDark ? Colors.darkText : Colors.textDark }]}>A</Text>
+          </Pressable>
+          <Pressable onPress={handleBookmark} style={styles.fontBtn}>
+            <Ionicons
+              name={bookmarked ? "bookmark" : "bookmark-outline"}
+              size={20}
+              color={bookmarked ? Colors.gold : isDark ? Colors.darkText : Colors.textDark}
+            />
           </Pressable>
         </View>
       </View>

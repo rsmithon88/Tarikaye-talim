@@ -34,6 +34,36 @@ export const chapters = pgTable("chapters", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
+export const libraryBooks = pgTable("library_books", {
+  id: serial("id").primaryKey(),
+  title: varchar("title", { length: 255 }).notNull(),
+  description: text("description").default(""),
+  status: varchar("status", { length: 50 }).default("upcoming"),
+  sortOrder: integer("sort_order").default(0),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const bookmarks = pgTable("bookmarks", {
+  id: serial("id").primaryKey(),
+  deviceId: varchar("device_id", { length: 100 }).notNull(),
+  bookId: integer("book_id").notNull(),
+  chapterId: integer("chapter_id").notNull(),
+  bookTitle: varchar("book_title", { length: 255 }).default(""),
+  chapterTitle: varchar("chapter_title", { length: 255 }).default(""),
+  scrollPosition: integer("scroll_position").default(0),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const supportMessages = pgTable("support_messages", {
+  id: serial("id").primaryKey(),
+  name: varchar("name", { length: 255 }).notNull(),
+  address: text("address").default(""),
+  mobile: varchar("mobile", { length: 50 }).default(""),
+  details: text("details").notNull(),
+  isRead: boolean("is_read").default(false),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
 export const insertBookSchema = createInsertSchema(books).omit({ id: true, createdAt: true, updatedAt: true });
 export const insertChapterSchema = createInsertSchema(chapters).omit({ id: true, createdAt: true, updatedAt: true });
 

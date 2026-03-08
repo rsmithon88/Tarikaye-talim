@@ -5,13 +5,26 @@ import { BlurView } from "expo-blur";
 import { Platform, StyleSheet, useColorScheme, View } from "react-native";
 import React from "react";
 import Colors from "@/constants/colors";
+import { Ionicons } from "@expo/vector-icons";
 
 function NativeTabLayout() {
   return (
     <NativeTabs>
       <NativeTabs.Trigger name="index">
+        <Icon sf={{ default: "house", selected: "house.fill" }} />
+        <Label>হোম</Label>
+      </NativeTabs.Trigger>
+      <NativeTabs.Trigger name="library">
         <Icon sf={{ default: "books.vertical", selected: "books.vertical.fill" }} />
-        <Label>তালিম</Label>
+        <Label>লাইব্রেরি</Label>
+      </NativeTabs.Trigger>
+      <NativeTabs.Trigger name="bookmarks">
+        <Icon sf={{ default: "bookmark", selected: "bookmark.fill" }} />
+        <Label>বুকমার্ক</Label>
+      </NativeTabs.Trigger>
+      <NativeTabs.Trigger name="settings">
+        <Icon sf={{ default: "gearshape", selected: "gearshape.fill" }} />
+        <Label>সেটিংস</Label>
       </NativeTabs.Trigger>
     </NativeTabs>
   );
@@ -61,11 +74,37 @@ function ClassicTabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: "তালিম",
-          tabBarIcon: ({ color, size }) => {
-            const { Ionicons } = require("@expo/vector-icons");
-            return <Ionicons name="library" size={size} color={color} />;
-          },
+          title: "হোম",
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="home" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="library"
+        options={{
+          title: "লাইব্রেরি",
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="library" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="bookmarks"
+        options={{
+          title: "বুকমার্ক",
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="bookmark" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="settings"
+        options={{
+          title: "সেটিংস",
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="settings-outline" size={size} color={color} />
+          ),
         }}
       />
     </Tabs>
