@@ -825,18 +825,38 @@ async function showSiteSettings() {
     const settings = await apiFetch('/api/admin/settings');
     const content = document.getElementById('main-content');
     content.innerHTML = `
-      <div style="max-width:700px;margin:0 auto;padding:32px 20px;">
-        <h2 style="margin-bottom:24px;font-size:22px;">সাইট সেটিংস</h2>
-        <p style="color:#aaa;margin-bottom:24px;font-size:14px;">এখানে পরিবর্তন করলে পাবলিক অ্যাপের হোম স্ক্রিনে সাথে সাথে দেখাবে।</p>
-        <div class="form-group">
-          <label class="form-label">প্রতিষ্ঠানের নাম</label>
-          <input id="site-org-name" class="form-input" value="${escAttr(settings.org_name || '')}" placeholder="ইকরা তালিমুল কুরআন বোর্ড বাংলাদেশ">
+      <div style="max-width:750px;margin:0 auto;padding:40px 24px;">
+        <div style="text-align:center;margin-bottom:36px;">
+          <div style="display:inline-flex;align-items:center;justify-content:center;width:64px;height:64px;border-radius:16px;background:linear-gradient(135deg,#1B2A4A,#2A3F6F);margin-bottom:16px;">
+            <span style="font-size:28px;">⚙️</span>
+          </div>
+          <h2 style="font-size:26px;margin:0 0 8px;">সাইট সেটিংস</h2>
+          <p style="color:#8899AA;font-size:15px;margin:0;">এখানে পরিবর্তন করলে পাবলিক অ্যাপের হোম স্ক্রিনে সাথে সাথে দেখাবে</p>
         </div>
-        <div class="form-group">
-          <label class="form-label">সাবটাইটেল / ঠিকানা</label>
-          <input id="site-org-subtitle" class="form-input" value="${escAttr(settings.org_subtitle || '')}" placeholder="এলেঙ্গা, টাঙ্গাইল">
+
+        <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:28px 24px;">
+          <div class="form-group" style="margin-bottom:24px;">
+            <label class="form-label" style="font-size:15px;margin-bottom:10px;display:flex;align-items:center;gap:8px;">
+              <span style="font-size:18px;">🏛️</span> প্রতিষ্ঠানের নাম
+            </label>
+            <input id="site-org-name" class="form-input" style="font-size:16px;padding:14px 16px;border-radius:10px;" value="${escAttr(settings.org_name || '')}" placeholder="ইকরা তালিমুল কুরআন বোর্ড বাংলাদেশ">
+            <p style="color:#667;font-size:12px;margin:8px 0 0 4px;">হোম স্ক্রিনের উপরে বড় করে দেখাবে</p>
+          </div>
+          <div class="form-group" style="margin-bottom:28px;">
+            <label class="form-label" style="font-size:15px;margin-bottom:10px;display:flex;align-items:center;gap:8px;">
+              <span style="font-size:18px;">📍</span> সাবটাইটেল / ঠিকানা
+            </label>
+            <input id="site-org-subtitle" class="form-input" style="font-size:16px;padding:14px 16px;border-radius:10px;" value="${escAttr(settings.org_subtitle || '')}" placeholder="এলেঙ্গা, টাঙ্গাইল">
+            <p style="color:#667;font-size:12px;margin:8px 0 0 4px;">নামের নিচে ছোট করে দেখাবে</p>
+          </div>
+          <button class="btn-save-book" onclick="saveSiteSettings()" style="margin-top:8px;width:100%;padding:14px;font-size:16px;border-radius:10px;">
+            💾 সেভ করুন
+          </button>
         </div>
-        <button class="btn-save-book" onclick="saveSiteSettings()" style="margin-top:16px;">সেভ করুন</button>
+
+        <div style="text-align:center;margin-top:24px;">
+          <p style="color:#556;font-size:12px;">পরিবর্তনের পর রিফ্রেশ করলে পাবলিক অ্যাপে দেখা যাবে</p>
+        </div>
       </div>
     `;
   } catch { showToast('সেটিংস লোড করতে সমস্যা', 'error'); }
