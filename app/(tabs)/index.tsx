@@ -166,7 +166,12 @@ export default function HomeScreen() {
           <View style={styles.listHeader}>
             <View style={styles.headerRow}>
               <View style={{ flex: 1 }}>
-                <Text style={[styles.headerTitle, { color: isDark ? Colors.darkText : Colors.textDark }]}>
+                <Text
+                  style={[styles.headerTitle, { color: isDark ? Colors.darkText : Colors.textDark }]}
+                  numberOfLines={1}
+                  adjustsFontSizeToFit
+                  minimumFontScale={0.6}
+                >
                   {orgName}
                 </Text>
                 <Text style={[styles.headerLabel, { color: isDark ? Colors.darkTextMid : Colors.textLight }]}>
@@ -227,8 +232,8 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontFamily: "SolaimanLipi-Bold",
-    fontSize: 20,
-    lineHeight: 28,
+    fontSize: 24,
+    lineHeight: 32,
   },
   headerIconWrap: {
     width: 48,

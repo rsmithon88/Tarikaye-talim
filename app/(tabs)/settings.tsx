@@ -31,15 +31,19 @@ export default function SettingsScreen() {
   const [supportDetails, setSupportDetails] = useState("");
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
   const topPad = Platform.OS === "web" ? 67 + insets.top : insets.top;
   const bottomPad = Platform.OS === "web" ? 34 : insets.bottom;
 
   const handleRefresh = () => {
+    if (refreshing) return;
     if (Platform.OS !== "web") {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
+    setRefreshing(true);
     queryClient.invalidateQueries();
+    setTimeout(() => setRefreshing(false), 1200);
   };
 
   const handleSendSupport = async () => {
@@ -110,10 +114,12 @@ export default function SettingsScreen() {
 
           <View style={[styles.divider, { backgroundColor: isDark ? Colors.darkBorder : Colors.border }]} />
 
-          <Pressable onPress={handleRefresh} style={styles.menuItem}>
-            <Ionicons name="refresh" size={22} color={Colors.navy} />
-            <Text style={[styles.menuText, { color: isDark ? Colors.darkText : Colors.textDark }]}>রিফ্রেশ করুন</Text>
-            <Ionicons name="chevron-forward" size={18} color={isDark ? Colors.darkTextMid : Colors.textLight} />
+          <Pressable onPress={handleRefresh} style={[styles.menuItem, refreshing && { opacity: 0.6 }]}>
+            <Ionicons name="refresh" size={22} color={Colors.navy} style={refreshing ? { transform: [{ rotate: "360deg" }] } : undefined} />
+            <Text style={[styles.menuText, { color: isDark ? Colors.darkText : Colors.textDark }]}>
+              {refreshing ? "রিফ্রেশ হচ্ছে..." : "রিফ্রেশ করুন"}
+            </Text>
+            {!refreshing && <Ionicons name="chevron-forward" size={18} color={isDark ? Colors.darkTextMid : Colors.textLight} />}
           </Pressable>
         </View>
 
