@@ -185,63 +185,67 @@ export default function ChapterReaderScreen() {
         contentContainerStyle={[styles.contentContainer, { paddingBottom: bottomPad }]}
         showsVerticalScrollIndicator={false}
       >
-        {/* Book title */}
-        {book ? (
-          <Text style={[styles.bookNameLabel, { color: isDark ? Colors.darkTextMid : Colors.textLight }]}>
-            {book.title}
-          </Text>
-        ) : null}
+        <View style={[styles.pageFrame, { borderColor: isDark ? "rgba(201,168,76,0.25)" : "rgba(201,168,76,0.4)" }]}>
+          <View style={[styles.pageFrameInner, { borderColor: isDark ? "rgba(201,168,76,0.12)" : "rgba(201,168,76,0.2)" }]}>
+            {/* Corner ornaments */}
+            <View style={[styles.cornerTL, { borderColor: isDark ? "rgba(201,168,76,0.3)" : "rgba(201,168,76,0.5)" }]} />
+            <View style={[styles.cornerTR, { borderColor: isDark ? "rgba(201,168,76,0.3)" : "rgba(201,168,76,0.5)" }]} />
+            <View style={[styles.cornerBL, { borderColor: isDark ? "rgba(201,168,76,0.3)" : "rgba(201,168,76,0.5)" }]} />
+            <View style={[styles.cornerBR, { borderColor: isDark ? "rgba(201,168,76,0.3)" : "rgba(201,168,76,0.5)" }]} />
 
-        {/* Chapter heading */}
-        <Text
-          style={[
-            styles.chapterHeading,
-            { color: isDark ? Colors.darkText : Colors.textDark },
-          ]}
-        >
-          {chapter.title}
-        </Text>
+            {book ? (
+              <Text style={[styles.bookNameLabel, { color: isDark ? Colors.darkTextMid : Colors.textLight }]}>
+                {book.title}
+              </Text>
+            ) : null}
 
-        {/* Divider */}
-        <View style={[styles.divider, { backgroundColor: accentColor }]} />
-
-        {/* Content */}
-        {chapter.content ? (
-          <Text
-            style={[
-              styles.chapterContent,
-              {
-                fontSize,
-                lineHeight,
-                color: isDark ? "#E8E3D8" : "#2A2A3E",
-              },
-            ]}
-          >
-            {chapter.content}
-          </Text>
-        ) : (
-          <View style={styles.emptyContent}>
-            <Ionicons
-              name="document-outline"
-              size={40}
-              color={isDark ? Colors.darkBorder : Colors.border}
-            />
-            <Text style={[styles.emptyText, { color: isDark ? Colors.darkTextMid : Colors.textMid }]}>
-              এই অধ্যায়ে এখনো কোনো লেখা নেই
+            <Text
+              style={[
+                styles.chapterHeading,
+                { color: isDark ? Colors.darkText : Colors.textDark },
+              ]}
+            >
+              {chapter.title}
             </Text>
-          </View>
-        )}
 
-        {/* End of chapter */}
-        {chapter.content ? (
-          <View style={styles.endMark}>
-            <View style={[styles.endLine, { backgroundColor: isDark ? Colors.darkBorder : Colors.border }]} />
-            <View style={[styles.endDot, { backgroundColor: accentColor }]} />
-            <View style={[styles.endLine, { backgroundColor: isDark ? Colors.darkBorder : Colors.border }]} />
-          </View>
-        ) : null}
+            <View style={[styles.divider, { backgroundColor: accentColor }]} />
 
-        {/* Back to book button */}
+            {chapter.content ? (
+              <Text
+                style={[
+                  styles.chapterContent,
+                  {
+                    fontSize,
+                    lineHeight,
+                    color: isDark ? "#E8E3D8" : "#2A2A3E",
+                  },
+                ]}
+              >
+                {chapter.content}
+              </Text>
+            ) : (
+              <View style={styles.emptyContent}>
+                <Ionicons
+                  name="document-outline"
+                  size={40}
+                  color={isDark ? Colors.darkBorder : Colors.border}
+                />
+                <Text style={[styles.emptyText, { color: isDark ? Colors.darkTextMid : Colors.textMid }]}>
+                  এই অধ্যায়ে এখনো কোনো লেখা নেই
+                </Text>
+              </View>
+            )}
+
+            {chapter.content ? (
+              <View style={styles.endMark}>
+                <View style={[styles.endLine, { backgroundColor: isDark ? Colors.darkBorder : Colors.border }]} />
+                <View style={[styles.endDot, { backgroundColor: accentColor }]} />
+                <View style={[styles.endLine, { backgroundColor: isDark ? Colors.darkBorder : Colors.border }]} />
+              </View>
+            ) : null}
+          </View>
+        </View>
+
         {chapter.book_id ? (
           <Pressable
             onPress={() => {
@@ -254,7 +258,7 @@ export default function ChapterReaderScreen() {
             ]}
           >
             <Ionicons name="arrow-back" size={16} color="white" />
-            <Text style={styles.backToBookText}>বইয়ে ফিরুন</Text>
+            <Text style={styles.backToBookText}>ব্যাক করুন</Text>
           </Pressable>
         ) : null}
       </ScrollView>
@@ -320,11 +324,64 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   contentContainer: {
-    paddingHorizontal: 24,
-    paddingTop: 32,
+    paddingHorizontal: 12,
+    paddingTop: 24,
     maxWidth: 680,
     alignSelf: "center",
     width: "100%",
+  },
+  pageFrame: {
+    borderWidth: 2,
+    borderRadius: 8,
+    padding: 6,
+  },
+  pageFrameInner: {
+    borderWidth: 1,
+    borderRadius: 4,
+    paddingHorizontal: 18,
+    paddingVertical: 24,
+    position: "relative",
+    overflow: "hidden",
+  },
+  cornerTL: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    width: 18,
+    height: 18,
+    borderTopWidth: 2,
+    borderLeftWidth: 2,
+    borderTopLeftRadius: 4,
+  },
+  cornerTR: {
+    position: "absolute",
+    top: 0,
+    right: 0,
+    width: 18,
+    height: 18,
+    borderTopWidth: 2,
+    borderRightWidth: 2,
+    borderTopRightRadius: 4,
+  },
+  cornerBL: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    width: 18,
+    height: 18,
+    borderBottomWidth: 2,
+    borderLeftWidth: 2,
+    borderBottomLeftRadius: 4,
+  },
+  cornerBR: {
+    position: "absolute",
+    bottom: 0,
+    right: 0,
+    width: 18,
+    height: 18,
+    borderBottomWidth: 2,
+    borderRightWidth: 2,
+    borderBottomRightRadius: 4,
   },
   bookNameLabel: {
     fontFamily: "SolaimanLipi",
@@ -385,6 +442,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingVertical: 12,
     borderRadius: 24,
+    marginTop: 24,
   },
   backToBookText: {
     color: "white",
