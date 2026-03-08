@@ -164,16 +164,21 @@ export default function HomeScreen() {
         }
         ListHeaderComponent={
           <View style={styles.listHeader}>
-            <View style={styles.headerRow}>
-              <View style={{ flex: 1 }}>
+            <View style={[styles.headerBanner, { borderColor: isDark ? "rgba(201,168,76,0.2)" : "rgba(201,168,76,0.35)" }]}>
+              <View style={[styles.headerBannerInner, { borderColor: isDark ? "rgba(201,168,76,0.1)" : "rgba(201,168,76,0.18)", backgroundColor: isDark ? "rgba(201,168,76,0.04)" : "rgba(201,168,76,0.06)" }]}>
+                <View style={[styles.hCornerTL, { borderColor: isDark ? "rgba(201,168,76,0.25)" : "rgba(201,168,76,0.45)" }]} />
+                <View style={[styles.hCornerTR, { borderColor: isDark ? "rgba(201,168,76,0.25)" : "rgba(201,168,76,0.45)" }]} />
+                <View style={[styles.hCornerBL, { borderColor: isDark ? "rgba(201,168,76,0.25)" : "rgba(201,168,76,0.45)" }]} />
+                <View style={[styles.hCornerBR, { borderColor: isDark ? "rgba(201,168,76,0.25)" : "rgba(201,168,76,0.45)" }]} />
                 <Text
                   style={[styles.headerTitle, { color: isDark ? Colors.darkText : Colors.textDark }]}
                   numberOfLines={1}
                   adjustsFontSizeToFit
-                  minimumFontScale={0.6}
+                  minimumFontScale={0.5}
                 >
                   {orgName}
                 </Text>
+                <View style={[styles.headerDivider, { backgroundColor: isDark ? "rgba(201,168,76,0.3)" : "rgba(201,168,76,0.5)" }]} />
                 <Text style={[styles.headerLabel, { color: isDark ? Colors.darkTextMid : Colors.textLight }]}>
                   {orgSubtitle}
                 </Text>
@@ -219,21 +224,77 @@ const styles = StyleSheet.create({
   listHeader: {
     marginBottom: 20,
   },
-  headerRow: {
-    flexDirection: "row",
+  headerBanner: {
+    borderWidth: 2,
+    borderRadius: 10,
+    padding: 5,
+  },
+  headerBannerInner: {
+    borderWidth: 1,
+    borderRadius: 6,
+    paddingHorizontal: 16,
+    paddingVertical: 18,
     alignItems: "center",
-    justifyContent: "space-between",
-    marginBottom: 16,
+    position: "relative",
+    overflow: "hidden",
+  },
+  hCornerTL: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    width: 20,
+    height: 20,
+    borderTopWidth: 2,
+    borderLeftWidth: 2,
+    borderTopLeftRadius: 6,
+  },
+  hCornerTR: {
+    position: "absolute",
+    top: 0,
+    right: 0,
+    width: 20,
+    height: 20,
+    borderTopWidth: 2,
+    borderRightWidth: 2,
+    borderTopRightRadius: 6,
+  },
+  hCornerBL: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    width: 20,
+    height: 20,
+    borderBottomWidth: 2,
+    borderLeftWidth: 2,
+    borderBottomLeftRadius: 6,
+  },
+  hCornerBR: {
+    position: "absolute",
+    bottom: 0,
+    right: 0,
+    width: 20,
+    height: 20,
+    borderBottomWidth: 2,
+    borderRightWidth: 2,
+    borderBottomRightRadius: 6,
+  },
+  headerDivider: {
+    width: 50,
+    height: 2,
+    borderRadius: 1,
+    marginVertical: 8,
   },
   headerLabel: {
     fontFamily: "SolaimanLipi",
-    fontSize: 12,
-    marginTop: 2,
+    fontSize: 13,
+    textAlign: "center",
   },
   headerTitle: {
     fontFamily: "SolaimanLipi-Bold",
-    fontSize: 24,
-    lineHeight: 32,
+    fontSize: 26,
+    lineHeight: 34,
+    textAlign: "center",
+    width: "100%",
   },
   headerIconWrap: {
     width: 48,
