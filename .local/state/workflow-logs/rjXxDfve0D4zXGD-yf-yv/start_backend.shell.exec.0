@@ -1,0 +1,11 @@
+[1G[0K⠙[1G[0K
+> expo-app@1.0.0 server:dev
+> NODE_ENV=development tsx server/index.ts
+
+[1G[0K⠙[1G[0KServing static Expo files with dynamic manifest routing
+Expo routing: Checking expo-platform header on / and /manifest
+express server serving on port 5000
+GET /api/settings 200 in 15ms :: {"dev_name":"","dev_address":"","dev_madrasa":…
+GET /api/books 200 in 35ms :: []
+GET /api/books 304 in 11ms :: []
+GET /api/settings 304 in 2ms :: {"dev_name":"","dev_address":"","dev_madrasa":"…
